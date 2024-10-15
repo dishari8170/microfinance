@@ -1,0 +1,170 @@
+@import "bootstrap/dist/css/bootstrap.css";
+
+body{
+    margin: 0;
+}
+.lll{
+
+    color: #273B90;
+}
+
+.left {
+    flex: 1;
+    background-color: #A4CCFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+
+.right {
+    flex: 1;
+    background: linear-gradient(100deg, #f01e2c, #7C4DFF);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+
+.right h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.right h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.form {
+    width: 80%;
+    max-width: 400px;
+}
+
+.inputContainer {
+    margin-bottom: 15px;
+}
+
+.input {
+    width: 100%;
+    padding: 6px;
+    border: none;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 1rem;
+}
+
+.keepLoggedIn {
+    display: flex;
+    align-items: center;
+   margin-bottom:10px ;
+}
+
+.keepLoggedIn label {
+    margin-left: 10px;
+}
+
+.forgotPassword {
+    display: block;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-decoration: underline;
+    text-align: right;
+}
+
+.button {
+    width: 100%;
+    padding: 6px;
+    background-color: #273B90;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.button:hover {
+    background-color: #003399;
+}
+
+.roww1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+background-color: #A4CCFF;
+
+
+}
+.roww2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(100deg, #f01e2c, #7C4DFF);
+
+}
+.ropew2 {
+    background: linear-gradient(100deg, #f01e2c, #7C4DFF);
+}
+
+
+
+.sidebar{
+
+
+    transition: ease-in-out 0.3s ;
+    width: 300px;
+
+}
+.sidebar div{
+
+
+}
+.sidebar.show{
+    transition: ease-in-out 0.2s ;
+    width: 0px;
+    display: none;
+}
+
+.xitem div{
+
+
+    border-radius: 8px;
+    align-items: center;
+    display: flex;
+    padding: 12px;
+    color: #5e5d72;
+    margin: 1px 15px 0px 10px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+
+}
+
+.xitem div:hover{
+    color: #0858f7;
+    background-color: #f0f0f0;
+
+}
+
+.xitem   .act{
+    background-color: #ebf6ff;
+
+    color: #0858f7;
+
+}
+
+
+.lx:hover{
+    background-color: #031525;
+}
+.bg2{background-image: radial-gradient(#e96f37, #0c2ba7)}
+.cbg{
+
+}
+
+
