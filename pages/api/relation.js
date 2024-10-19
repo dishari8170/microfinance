@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
-import rankDB from "@/models/rankDB"
+import relationDB from "@/models/relationDB"
+
 export default async (req, res) => {
 
     await dbConnect()
@@ -7,7 +8,7 @@ export default async (req, res) => {
 
 
     if (req.method==="GET"){
-        let t= await rankDB .find()
+        let t= await relationDB .find()
 
         res.status(200).json(t)
 
@@ -15,7 +16,7 @@ export default async (req, res) => {
 
 
     if (req.method==="POST"){
-        let rt=   await rankDB.create(req.body);
+        let rt=   await relationDB.create(req.body);
 
         setTimeout(() => {
             res.status(200).json("done")
@@ -28,7 +29,7 @@ export default async (req, res) => {
     }
 
     if (req.method==="DELETE"){
-        let rt=   await rankDB.deleteOne({_id:req.query.id});
+        let rt=   await relationDB.deleteOne({_id:req.query.id});
 
 
         res.status(200).json(rt)
