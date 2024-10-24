@@ -6,6 +6,7 @@ import { FaEye, FaTrash } from "react-icons/fa";
 import Sidex from "@/Comp/Sidex";
 import * as Yup from "yup";
 import { dh } from "@/lib/Dh";
+import SideZ from "@/Comp/SideZ";
 
 const validationSchema = Yup.object().shape({
     relation: Yup.string().required("Relation is required"),
@@ -51,7 +52,7 @@ export default() => {
     };
 
     return (
-        <Sidex>
+        <>
             <div className="container">
                 <h1>Relation Manager</h1>
                 <Formik
@@ -128,6 +129,6 @@ export default() => {
                     </tbody>
                 </table>
             </div>
-        </Sidex>
+        </>
     );
 }

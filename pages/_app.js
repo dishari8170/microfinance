@@ -1,8 +1,12 @@
 import '@/styles/globals.css'
 import Script from "next/script";
+import {useRouter} from "next/router";
+import SideZ from "@/Comp/SideZ";
 
 export default function App({ Component, pageProps }) {
 
+
+    const router = useRouter()
 
 
 
@@ -18,7 +22,9 @@ export default function App({ Component, pageProps }) {
 
       </div>
       <Script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"/>
-      <Component {...pageProps} />
+
+      {router.asPath.split("/").length>2?<SideZ><Component {...pageProps} /></SideZ>:<Component {...pageProps} />}
+
 
   </>
 }

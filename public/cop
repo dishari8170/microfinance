@@ -1,5 +1,1 @@
-name:Yup.string().required("Rank is required"),
-type:Yup.string().required("Rank is required"),
-dp:Yup.string().required("Rank is required"),
-password:Yup.string().required("Rank is required"),
-email:Yup.string().required("Rank is required"),
+branch_master","career_master","career_structure","configuaration","dashboard","director_master","directorr_master","employ","group_master","ledger_master","loancal","menu_master","photo","rank_and_designation","relation_master","user_master","year_master.js

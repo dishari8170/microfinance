@@ -1,11 +1,12 @@
 import {Field, Formik} from "formik";
 import Sidex from "@/Comp/Sidex";
+import SideZ from "@/Comp/SideZ";
 
 export default () => {
 
 
     return <>
-<Sidex>
+<>
         <div className="fw-medium mb-3" style={{fontSize: 25}}>Borrower Entry From</div>
         Search
         <div className=" container-fluid">
@@ -44,7 +45,7 @@ export default () => {
 
 
         </div>
-</Sidex>
+</>
 
     </>
 

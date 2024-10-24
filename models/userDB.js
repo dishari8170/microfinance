@@ -1,15 +1,16 @@
 import mongoose from "mongoose";
-import {number} from "yup";
-
-const homeSchema
+const homeschema
     = new mongoose.Schema(
     {
 
-        user_type: { type: String, required: true },
-
-    }
+        user_id:String,
+        password:String,
+        user_type: String,
+        mobile_no: String,
+        email_id: String,
+       full_name: String,
+        log_in_branch:String,}
 
 );
 
-module.exports =
-    mongoose.models.userDB || mongoose.model("userDB", homeSchema);
+module.exports = mongoose.models.userDB || mongoose.model("userDB", homeschema);

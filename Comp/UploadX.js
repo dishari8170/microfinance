@@ -59,11 +59,11 @@ export default (prop)=>{
 
 
     }
-    return <div style={{width:"100%"}}>
+    return <div style={prop.style} className={prop.className}>
 
 
         <div className="d-flex justify-content-center">
-        <img className="img-fluid" src={dh.ImUrl+ (getdp??"dp.png")}/>
+        <img className="" src={dh.ImUrl+ (getdp??"dp.png")} style={{objectFit:"scale-down"}} height={prop.height} width={prop.width}/>
 
         </div>
 

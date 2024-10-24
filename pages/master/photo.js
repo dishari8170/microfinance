@@ -52,10 +52,17 @@ export default () => {
 
     return (
         <div className="container-fluid ">
+
+            <h1>beore</h1>
+            <div className="bucha"></div>
+
+            <h1>after</h1>
+
+
             <div className="row ">
                 <h2>Manage Your Profile</h2>
             </div>
-<UploadX/>
+            <UploadX/>
             <div className="col-12">
                 <h4>Change Your Profile Photo</h4>
             </div>
@@ -63,7 +70,8 @@ export default () => {
             <div className="col-12">
                 <h5>Current Photo</h5>
                 {profilePhoto ? (
-                    <img src={profilePhoto} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+                    <img src={profilePhoto} alt="Profile"
+                         style={{width: '100px', height: '100px', borderRadius: '50%'}}/>
                 ) : (
                     <p>No photo uploaded</p>
                 )}
@@ -76,15 +84,16 @@ export default () => {
                     id="file-upload"
                     accept="image/*"
                     onChange={handleFileChange}
-                    style={{ display: 'none' }}
+                    style={{display: 'none'}}
                 />
                 <div className="">
-                <button
-                    className="btn border-black"
-                    onClick={() => document.getElementById('file-upload').click()}
-                >
-                    Choose File
-                </button></div>
+                    <button
+                        className="btn border-black"
+                        onClick={() => document.getElementById('file-upload').click()}
+                    >
+                        Choose File
+                    </button>
+                </div>
                 <span className="ms-2">{fileName}</span>
                 <div className="mt-2">
                     <small>Recommended photo size is 250 pixels width X 250 pixels height</small>

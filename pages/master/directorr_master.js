@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { FaEye, FaTrash } from "react-icons/fa";
-import Sidex from "@/Comp/Sidex";
 import * as Yup from "yup";
 import { dh } from "@/lib/Dh";
+import SideZ from "@/Comp/SideZ";
 
 const validationSchema = Yup.object().shape({
     director_name: Yup.string().required("Director Name is required"),
@@ -73,7 +73,7 @@ export default() => {
 
     return (
         <>
-            <Sidex>
+            <>
                 <div className="container">
                     <div className="h5">Director Master</div>
                     <Formik
@@ -209,7 +209,7 @@ export default() => {
                         </tbody>
                     </table>
                 </div>
-            </Sidex>
+            </>
         </>
     );
 };

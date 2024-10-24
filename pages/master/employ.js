@@ -6,6 +6,7 @@ import { FaEye, FaTrash } from "react-icons/fa";
 import * as Yup from "yup";
 import { dh } from "@/lib/Dh";
 import UploadX from "@/Comp/UploadX";
+import SideZ from "@/Comp/SideZ";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Required'),
@@ -65,8 +66,9 @@ export default () => {
     const currentData = submittedData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
     return (
+<>
         <div className="container">
-            <h1></h1>
+            <h1>Employ</h1>
             <Formik
                 initialValues={{
                     name: "",
@@ -93,10 +95,13 @@ export default () => {
                             </div>
                             <div className="col-md-3 mb-2">
                                 <div>DP</div>
+{/*<div className="" style={{height:"80px"}}>*/}
+{/*    */}
+{/*                                <UploadX cb={(d)=>{*/}
 
-                                <UploadX cb={(d)=>{
-
-                                }}/>
+{/*                                }}/></div>*/}
+                                <Field className="form-control mt-2" name="dp"/>
+                                <ErrorMessage name="dp" component="div" className="text-danger mt-2"/>
                             </div>
                             <div className="col-md-3 mb-2">
                                 <div>Password</div>
@@ -168,5 +173,6 @@ export default () => {
                 ))}
             </div></div>
         </div>
+</>
     );
 };

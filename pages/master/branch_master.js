@@ -1,16 +1,11 @@
-import {ErrorMessage, Field, Form, Formik} from "formik";
-import {useEffect, useState} from "react";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { FaEye, FaTrash } from "react-icons/fa";
 
-
-
-
-import {FaBandcamp, FaEye, FaTrash} from "react-icons/fa";
-import Sidex from "@/Comp/Sidex";
 import * as Yup from "yup";
-import {dh} from "@/lib/Dh";
-
+import { dh } from "@/lib/Dh";
 
 const validationSchema = Yup.object().shape({
     branchName: Yup.string().required("Branch Name is required"),
@@ -22,27 +17,29 @@ const validationSchema = Yup.object().shape({
     openingDate: Yup.date().required("Opening Date is required"),
 });
 
+const ITEMS_PER_PAGE = 5;
+
 export default () => {
     const [submittedData, setSubmittedData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
-    const featchdata = async () => {
-        let dat = await axios.get("/api/branches")
-
-        setSubmittedData(dat.data)
-    }
-
-    const [eye, seteye] = useState(false);
-
+    const fetchData = async () => {
+        try {
+            const response = await axios.get("/api/branches");
+            setSubmittedData(response.data);
+            setTotalPages(Math.ceil(response.data.length / ITEMS_PER_PAGE));
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
     useEffect(() => {
+        fetchData();
+    }, []);
 
-        featchdata()
-    }, [])
-
-
-    const handleSubmit = async (values, {resetForm}) => {
-
-        dh.loadx(true)
+    const handleSubmit = async (values, { resetForm }) => {
+        dh.loadx(true);
         try {
             const response = await fetch('/api/branches', {
                 method: 'POST',
@@ -53,31 +50,30 @@ export default () => {
             });
 
             if (response.ok) {
-
-
-                Swal.fire("Done", "Data submited", "success").then(o => {
-
-
-                    featchdata()
-                })
+                Swal.fire("Done", "Data submitted", "success").then(() => {
+                    fetchData();
+                    resetForm();
+                });
             } else {
                 console.error('Error submitting data:', response.statusText);
             }
         } catch (error) {
             console.error('Error submitting data:', error);
+        } finally {
+            dh.loadx(false);
         }
-
-
-        dh.loadx(false)
     };
-    return <>
-        {/*<div className="btn btn-warning" onClick={()=>dh.loadx(true)}>cccc</div>*/}
-        {/*<div className="btn btn-warning" onClick={()=>dh.loadx()}>cccc</div>*/}
-        <Sidex>
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const currentData = submittedData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+    return (
+        <>
             <div className="container">
-                <div className="h1
-           ">Branch Information
-                </div>
+                <div className="fw-medium" style={{fontSize: "30px"}}>Branch Information</div>
                 <Formik
                     initialValues={{
                         branchName: "",
@@ -92,47 +88,53 @@ export default () => {
                     validationSchema={validationSchema}
                 >
                     {({resetForm}) => (
-                        <Form className="border border-dark p-3">
+                        <Form className="border  border-dark  shadow-sm bg-white p-3" >
+                            <div className="">
                             <div className="row fw-bold mt-4">
+
                                 <div className="col-md-3 mb-2">
                                     <div>Branch Name</div>
-                                    <Field className="form-control mt-2" name="branchName"/>
+                                    <Field className="form-control mt-2" name="branchName"
+                                           placeholder="Enter Branch Name"/>
                                     <ErrorMessage name="branchName" component="div" className="text-danger mt-2"/>
                                 </div>
 
                                 <div className="col-md-3 mb-2">
                                     <div>Manager Name</div>
-                                    <Field className="form-control mt-2" name="managerName"/>
+                                    <Field className="form-control mt-2" name="managerName"
+                                           placeholder="Enter Manager Name"/>
                                     <ErrorMessage name="managerName" component="div" className="mt-2 text-danger"/>
                                 </div>
 
                                 <div className="col-md-3 mb-2">
                                     <div>Branch Code</div>
-                                    <Field className="form-control mt-2" name="branchCode"/>
+                                    <Field className="form-control mt-2" name="branchCode"
+                                           placeholder="Enter Branch Code"/>
                                     <ErrorMessage name="branchCode" component="div" className="text-danger mt-2"/>
                                 </div>
 
                                 <div className="col-md-3 mb-2">
                                     <div>Prefix</div>
-                                    <Field className="form-control mt-2" name="prefix"/>
+                                    <Field className="form-control mt-2" name="prefix" placeholder="Enter Prefix"/>
                                     <ErrorMessage name="prefix" component="div" className="text-danger mt-2"/>
                                 </div>
 
                                 <div className="col-md-3 mb-2">
                                     <div>Address</div>
-                                    <Field className="form-control mt-2" name="address"/>
+                                    <Field className="form-control mt-2" name="address" placeholder="Enter Address"/>
                                     <ErrorMessage name="address" component="div" className="text-danger mt-2"/>
                                 </div>
 
                                 <div className="col-md-3 mb-2">
                                     <div>Phone Number</div>
-                                    <Field className="form-control mt-2" name="phoneNumber"/>
+                                    <Field className="form-control mt-2" name="phoneNumber"
+                                           placeholder="Enter Phone Number"/>
                                     <ErrorMessage name="phoneNumber" component="div" className="text-danger mt-2"/>
                                 </div>
 
                                 <div className="col-md-3 mb-2">
                                     <div>Opening Date</div>
-                                    <Field type={"date"} className="form-control mt-2" name="openingDate"/>
+                                    <Field type="date" className="form-control mt-2" name="openingDate"/>
                                     <ErrorMessage name="openingDate" component="div" className="text-danger mt-2"/>
                                 </div>
 
@@ -142,69 +144,86 @@ export default () => {
                                             onClick={resetForm}>Clear
                                     </button>
                                 </div>
-                            </div>
+                            </div></div>
                         </Form>
                     )}
                 </Formik>
-                <div className="mb-3 mt-3 fw-bold">Branch List</div>
-                <table className="table align-middle table-bordered border-black text-center">
+
+                <div className="mb-3  mt-3 fw-bold">Branch List</div>
+                <table className="table shadow-sm bg-white  align-middle table-bordered border-black text-center">
                     <thead>
                     <tr>
                         <th>Code</th>
                         <th>Branch Name</th>
+                        <th>Prefix</th>
                         <th>Action</th>
-
                     </tr>
                     </thead>
                     <tbody>
-                    {submittedData.map((data, index) => (
-
+                    {currentData.map((data, index) => (
                         <tr key={index}>
-                            <td>{data.phoneNumber}</td>
+                            <td>{data.branchCode}</td>
                             <td>{data.branchName}</td>
+                            <td>{data.prefix}</td>
                             <td>
-
-                                <div className="d-flex justify-content-center  ">
-
-                                    <div className={" btn btn-success "} onClick={(t) => {
-
-
-                                        axios.delete(`/api/branches?id=${data._id}`).then(t => {
-
-                                            featchdata()
-                                        })
-
-
-                                    }}><FaEye className="me-2" style={{fontSize: "25px",}}></FaEye>View
+                                <div className="d-flex justify-content-center">
+                                    <div className="btn btn-success" onClick={() => {
+                                        const {
+                                            branchName,
+                                            managerName,
+                                            branchCode,
+                                            prefix,
+                                            address,
+                                            phoneNumber,
+                                            openingDate
+                                        } = data;
+                                        Swal.fire({
+                                            title: 'Branch Details',
+                                            html: `
+                                                    <p><strong>Branch Name:</strong> ${branchName}</p>
+                                                    <p><strong>Manager Name:</strong> ${managerName}</p>
+                                                    <p><strong>Branch Code:</strong> ${branchCode}</p>
+                                                    <p><strong>Prefix:</strong> ${prefix}</p>
+                                                    <p><strong>Address:</strong> ${address}</p>
+                                                    <p><strong>Phone Number:</strong> ${phoneNumber}</p>
+                                                    <p><strong>Opening Date:</strong> ${openingDate}</p>
+                                                `,
+                                            confirmButtonText: 'Close'
+                                        });
+                                    }}>
+                                        <FaEye className="me-2" style={{fontSize: "25px"}}/>View
                                     </div>
 
-
-                                    <div className={" btn btn-danger ms-3"} onClick={(t) => {
-
-
-                                        axios.delete(`/api/branches?id=${data._id}`).then(t => {
-
-                                            featchdata()
-                                        })
-
-
-                                    }}><FaTrash className="me-2" style={{fontSize: "25px",}}></FaTrash>Delete
+                                    <div className="btn btn-danger ms-3" onClick={() => {
+                                        axios.delete(`/api/branches?id=${data._id}`)
+                                            .then(() => {
+                                                fetchData();
+                                            })
+                                            .catch(error => {
+                                                console.error('Error deleting branch:', error);
+                                                Swal.fire('Error', 'Could not delete branch.', 'error');
+                                            });
+                                    }}>
+                                        <FaTrash className="me-2" style={{fontSize: "25px"}}/>Delete
                                     </div>
-
-
                                 </div>
                             </td>
-
-
                         </tr>
                     ))}
                     </tbody>
                 </table>
 
-
+                <div className="justify-content-center align-items-center d-flex">
+                    <div className="pagination">
+                        {totalPages > 1 && Array.from({length: totalPages}, (_, index) => (
+                            <button key={index} onClick={() => handlePageChange(index + 1)}
+                                    className={`btn ${currentPage === index + 1 ? 'btn-primary' : 'btn-secondary'} me-1`}>
+                                {index + 1}
+                            </button>
+                        ))}
+                    </div>
+                </div>
             </div>
-        </Sidex>
-    </>
-
-
-}
+        </>
+    );
+};
