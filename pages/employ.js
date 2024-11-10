@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import Swal from "sweetalert2";
 import axios from "axios";
 import UploadX from "@/Comp/UploadX";
-import {dh} from "@/lib/Dh";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -50,9 +49,6 @@ export default () => {
         try {
             const response = await axios.get("/api/user?dia=4");
 
-
-
-
             console.log(response.data)
 
             setUserCode(response.data);
@@ -72,14 +68,15 @@ export default () => {
 
     const handleSubmit = async (values, {resetForm}) => {
 
-        await axios.post(`/api/user`,values).then(vl=>{
 
-            if (vl.data.stat=="ok"){
+        await axios.post(`/api/user`, values).then(vl => {
+
+            if (vl.data.stat == "ok") {
                 Swal.fire("Done", vl.data.msg, "success").then(() => {
 
                     resetForm();
                 });
-            }else {
+            } else {
                 Swal.fire("Done", "Data submitted", "error").then(() => {
 
                     resetForm();
@@ -88,36 +85,10 @@ export default () => {
 
 
         })
-
-        // try {
-        //     const formData = new FormData();
-        //     formData.append('user_code', agentCode);
-        //     Object.keys(values).forEach(key => {
-        //         formData.append(key,  values[key]);
-        //     });
-        //
-        //     const response = await fetch('/api/user', {
-        //         method: 'POST',
-        //         body: formData,
-        //     });
-        //
-        //     if (response.ok) {
-        //         Swal.fire("Done", "Data submitted", "success").then(() => {
-        //
-        //             resetForm();
-        //         });
-        //     } else {
-        //         console.error('Error submitting data:', response.statusText);
-        //     }
-        // } catch (error) {
-        //     console.error('Error submitting data:', error);
-        // }
     };
-
-
-
     useEffect(() => {
         fetchUserCode();
+
     }, []);
 
 
@@ -131,7 +102,7 @@ export default () => {
             <Formik
                 enableReinitialize={true}
                 initialValues={{
-                    agent_code: agentCode,
+                    employee_code:agentCode,
                     name: '',
                     fatherName: '',
                     motherName:'',
@@ -174,8 +145,8 @@ export default () => {
                         <div className="row fw-bold mt-4">
 
                             <div className="col-md-3 mb-2">
-                                <div>Agent</div>
-                                <Field className="form-control mt-2" name="agent_code"/>
+                                <div>Employee</div>
+                                <Field className="form-control mt-2" name="employee_code"/>
 
                             </div>
                             <div className="col-md-3 mb-2">
@@ -190,7 +161,7 @@ export default () => {
                                        placeholder="Enter father's name"/>
                                 <ErrorMessage name="fatherName" component="div" className="text-danger mt-2"/>
                             </div>
-<div className="col-md-3 mb-2">
+                            <div className="col-md-3 mb-2">
                                 <div>Mother Name</div>
                                 <Field className="form-control mt-2" name="motherName"
                                        placeholder="Enter mothers's name"/>
@@ -444,7 +415,7 @@ export default () => {
 
             </Formik>
 
-            
+
         </div>
 
     )

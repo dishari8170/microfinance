@@ -21,7 +21,6 @@ export default function App({ Component, pageProps }) {
 
 
       </div>
-      <Script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"/>
 
       {router.asPath.split("/").length>2?<SideZ><Component {...pageProps} /></SideZ>:<Component {...pageProps} />}
 

@@ -13,27 +13,55 @@ export default () => {
         password: Yup.string().required('Password is required'),
     });
 
-    const handleSubmit = (values) => {
+    const handleSubmit = async (values) => {
         const { username, password } = values;
 
-        if (username === 'admin' && password === 'bankura123') {
-            Swal.fire({
-                title: 'Success!',
-                text: 'Login successful',
-                icon: 'success',
-                confirmButtonText: 'Okay'
-            }).then(() => {
-                router.push('/master/dashboard');
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
             });
-        } else {
+
+            const data = await response.json();
+
+            if (response.ok) {
+
+                localStorage.setItem('userRole', data.role);
+
+                Swal.fire({
+                    title: 'Success!',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonText: 'Okay'
+                }).then(() => {
+                    router.push(`/dashboard?role=${data.role}`);
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: data.message,
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
+            }
+        } catch (error) {
             Swal.fire({
                 title: 'Error!',
-                text: 'Could not log in. Please check your credentials.',
+                text: 'Something went wrong. Please try again later.',
                 icon: 'error',
-                confirmButtonText: 'Try Again'
+                confirmButtonText: 'Okay'
             });
         }
     };
+
+
+
+
+
+
 
     const handleForgotPassword = () => {
         Swal.fire({
@@ -77,16 +105,17 @@ export default () => {
                     </div>
                 </div>
                 <div className="col-12 align-items-center justify-content-center col-md-6 d-flex text-center text-white ropew2">
-                    <div className="w-100 p-5 mx-md-5" style={{ fontFamily: 'roboto' }}>
+                    <div className="w-100 p-5 mx-md-5" style={{fontFamily: 'roboto'}}>
                         <div className="h1 mb-3">Welcome</div>
                         <div className="h2 mb-5">PRATIBA MICROFINANCE</div>
 
+
                         <Formik
-                            initialValues={{ username: '', password: '' }}
+                            initialValues={{username: '', password: ''}}
                             validationSchema={validationSchema}
                             onSubmit={handleSubmit}
                         >
-                            {({ isSubmitting }) => (
+                            {({isSubmitting}) => (
                                 <Form>
                                     <div className="text-start mt-3 fw-bold">
                                         Username
@@ -96,7 +125,7 @@ export default () => {
                                             placeholder=""
                                             className="form-control mt-2"
                                         />
-                                        <ErrorMessage name="username" component="div" className="text-danger mt-2" />
+                                        <ErrorMessage name="username" component="div" className="text-danger mt-2"/>
                                     </div>
                                     <div className="text-start mt-3 fw-bold">
                                         Password
@@ -106,18 +135,19 @@ export default () => {
                                             placeholder=""
                                             className="form-control mt-2"
                                         />
-                                        <ErrorMessage name="password" component="div" className="text-danger mt-2" />
+                                        <ErrorMessage name="password" component="div" className="text-danger mt-2"/>
                                     </div>
                                     <div className="d-flex justify-content-between mt-3">
                                         <div>
-                                            <Field type="checkbox" name="keepLoggedIn" />
+                                            <Field type="checkbox" name="keepLoggedIn"/>
                                             <label>Keep me logged in</label>
                                         </div>
                                         <a className="text-white" href="#" onClick={handleForgotPassword}>
                                             Forgot Password?
                                         </a>
                                     </div>
-                                    <button type="submit" className="w-100 btn btn-primary mt-4" style={{ backgroundColor: '#003399' }}>
+                                    <button type="submit" className="w-100 btn btn-primary mt-4"
+                                            style={{backgroundColor: '#003399'}}>
                                         Login
                                     </button>
                                     {loginError && <div className="text-danger mt-2">{loginError}</div>}

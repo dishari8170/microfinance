@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { FaEye, FaTrash } from "react-icons/fa";
-import Sidex from "@/Comp/Sidex";
+
 import * as Yup from "yup";
 import { dh } from "@/lib/Dh";
 

@@ -1,1 +1,50 @@
-branch_master","career_master","career_structure","configuaration","dashboard","director_master","directorr_master","employ","group_master","ledger_master","loancal","menu_master","photo","rank_and_designation","relation_master","user_master","year_master.js
+ <div className="col-md-4 mb-2">
+                                <div>Village</div>
+                                <Field className="form-control mt-2" name="permanentAddress.village"
+                                       placeholder="Enter village"/>
+                                <ErrorMessage name="permanentAddress.village" component="div"
+                                              className="text-danger mt-2"/>
+                            </div>
+
+                            <div className="col-md-4 mb-2">
+                                <div>Post</div>
+                                <Field className="form-control mt-2" name="permanentAddress.post"
+                                       placeholder="Enter post"/>
+                                <ErrorMessage name="permanentAddress.post" component="div" className="text-danger mt-2"/>
+                            </div>
+
+                            <div className="col-md-4 mb-2">
+                                <div>Block</div>
+                                <Field className="form-control mt-2" name="permanentAddress.block"
+                                       placeholder="Enter block"/>
+                                <ErrorMessage name="permanentAddress.block" component="div" className="text-danger mt-2"/>
+                            </div>
+
+                            <div className="col-md-4 mb-2">
+                                <div>City</div>
+                                <Field className="form-control mt-2" name="permanentAddress.city"
+                                       placeholder="Enter city"/>
+                                <ErrorMessage name="permanentAddress.city" component="div" className="text-danger mt-2"/>
+                            </div>
+
+                            <div className="col-md-4 mb-2">
+                                <div>District</div>
+                                <Field className="form-control mt-2" name="permanentAddress.dist"
+                                       placeholder="Enter district"/>
+                                <ErrorMessage name="permanentAddress.dist" component="div" className="text-danger mt-2"/>
+                            </div>
+
+                            <div className="col-md-4 mb-2">
+                                <div>State</div>
+                                <Field className="form-control mt-2" name="permanentAddress.state"
+                                       placeholder="Enter state"/>
+                                <ErrorMessage name="permanentAddress.state" component="div" className="text-danger mt-2"/>
+                            </div>
+
+                            <div className="col-md-4 mb-2">
+                                <div>Pincode</div>
+                                <Field className="form-control mt-2" name="permanentAddress.pincode"
+                                       placeholder="Enter pincode"/>
+                                <ErrorMessage name="permanentAddress.pincode" component="div"
+                                              className="text-danger mt-2"/>
+                            </div>

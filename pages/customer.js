@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import Swal from "sweetalert2";
 import axios from "axios";
 import UploadX from "@/Comp/UploadX";
-import {dh} from "@/lib/Dh";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -36,7 +35,6 @@ const validationSchema = Yup.object().shape({
     addressProofNumber: Yup.string().required('Address proof number is required'),
     identityProofImage: Yup.string()
         .required('Identity proof image is required'),
-
     addressProofImage: Yup.mixed()
         .required('Address proof image is required')
 
@@ -49,9 +47,6 @@ export default () => {
     const fetchUserCode = async () => {
         try {
             const response = await axios.get("/api/user?dia=4");
-
-
-
 
             console.log(response.data)
 
@@ -72,14 +67,15 @@ export default () => {
 
     const handleSubmit = async (values, {resetForm}) => {
 
-        await axios.post(`/api/user`,values).then(vl=>{
 
-            if (vl.data.stat=="ok"){
+        await axios.post(`/api/user`, values).then(vl => {
+
+            if (vl.data.stat == "ok") {
                 Swal.fire("Done", vl.data.msg, "success").then(() => {
 
                     resetForm();
                 });
-            }else {
+            } else {
                 Swal.fire("Done", "Data submitted", "error").then(() => {
 
                     resetForm();
@@ -88,36 +84,10 @@ export default () => {
 
 
         })
-
-        // try {
-        //     const formData = new FormData();
-        //     formData.append('user_code', agentCode);
-        //     Object.keys(values).forEach(key => {
-        //         formData.append(key,  values[key]);
-        //     });
-        //
-        //     const response = await fetch('/api/user', {
-        //         method: 'POST',
-        //         body: formData,
-        //     });
-        //
-        //     if (response.ok) {
-        //         Swal.fire("Done", "Data submitted", "success").then(() => {
-        //
-        //             resetForm();
-        //         });
-        //     } else {
-        //         console.error('Error submitting data:', response.statusText);
-        //     }
-        // } catch (error) {
-        //     console.error('Error submitting data:', error);
-        // }
     };
-
-
-
     useEffect(() => {
         fetchUserCode();
+
     }, []);
 
 
@@ -131,7 +101,7 @@ export default () => {
             <Formik
                 enableReinitialize={true}
                 initialValues={{
-                    agent_code: agentCode,
+                   customer_code: agentCode,
                     name: '',
                     fatherName: '',
                     motherName:'',
@@ -174,8 +144,8 @@ export default () => {
                         <div className="row fw-bold mt-4">
 
                             <div className="col-md-3 mb-2">
-                                <div>Agent</div>
-                                <Field className="form-control mt-2" name="agent_code"/>
+                                <div>Customer</div>
+                                <Field className="form-control mt-2" name="customer_code"/>
 
                             </div>
                             <div className="col-md-3 mb-2">
@@ -190,7 +160,7 @@ export default () => {
                                        placeholder="Enter father's name"/>
                                 <ErrorMessage name="fatherName" component="div" className="text-danger mt-2"/>
                             </div>
-<div className="col-md-3 mb-2">
+                            <div className="col-md-3 mb-2">
                                 <div>Mother Name</div>
                                 <Field className="form-control mt-2" name="motherName"
                                        placeholder="Enter mothers's name"/>
@@ -278,7 +248,8 @@ export default () => {
 
                             <div className="col-12 d-inline-flex justify-content-between">
                                 <h3>Permanent Address Same</h3>
-                                <input type="checkbox" name="" className="form-check-input border-danger mt-2" style={{height:"30px",width:"30px",}} onChange={async u => {
+                                <input type="checkbox" name="" className="form-check-input border-danger mt-2"
+                                       style={{height: "30px", width: "30px",}} onChange={async u => {
 
 
                                     if (u.target.checked) {
@@ -429,22 +400,31 @@ export default () => {
 
                             </div>
 
-                            {JSON.stringify(values)}
-                            <div className="text-end mt-3">
-                                <input className="btn px-5 btn-success" type="submit" value="submit"/>
-                                <button className="btn px-5 ms-2 btn-warning text-white" type="button"
-                                        onClick={resetForm}>Clear
-                                </button>
-                            </div>
 
                         </div>
+
+                        {JSON.stringify(values)}
+
+                        <div className="row   mt-3">
+<div className="col-md-4 col-12 mb-2">
+                            <Field className="form-control  " name="parent_code"
+                                   placeholder="Enter Agent Code"/></div>
+
+                            <input className="btn-sm btn btn-success col-md-4 col-6" type="submit" value="submit"/>
+                            <button className="btn-sm  btn  btn-warning col-md-4 col-6 text-white" type="button"
+                                    onClick={resetForm}>Clear
+                            </button>
+
+                        </div>
+
+
                     </Form>
 
                 )}
 
             </Formik>
 
-            
+
         </div>
 
     )
