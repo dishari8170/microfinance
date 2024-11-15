@@ -20,6 +20,7 @@ export default ()=>
                 </div>
 
             </div>
+
             <div className="col-md-6 col-lg-4 p-2 mt-lg-2">
 
                 <div className="p-5" style={{backgroundColor: "#89b5e2"}}>

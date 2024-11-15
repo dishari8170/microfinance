@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import Swal from "sweetalert2";
 import axios from "axios";
 import UploadX from "@/Comp/UploadX";
-import {dh} from "@/lib/Dh";
+
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -89,35 +89,15 @@ export default () => {
 
         })
 
-        // try {
-        //     const formData = new FormData();
-        //     formData.append('user_code', agentCode);
-        //     Object.keys(values).forEach(key => {
-        //         formData.append(key,  values[key]);
-        //     });
-        //
-        //     const response = await fetch('/api/user', {
-        //         method: 'POST',
-        //         body: formData,
-        //     });
-        //
-        //     if (response.ok) {
-        //         Swal.fire("Done", "Data submitted", "success").then(() => {
-        //
-        //             resetForm();
-        //         });
-        //     } else {
-        //         console.error('Error submitting data:', response.statusText);
-        //     }
-        // } catch (error) {
-        //     console.error('Error submitting data:', error);
-        // }
+
     };
 
 
 
     useEffect(() => {
+
         fetchUserCode();
+
     }, []);
 
 
@@ -129,6 +109,7 @@ export default () => {
 
 
             <Formik
+
                 enableReinitialize={true}
                 initialValues={{
                     agent_code: agentCode,
@@ -166,7 +147,7 @@ export default () => {
                     identityProofImage: null,
                     addressProofImage: null,
                 }}
-                validationSchema={validationSchema}
+                // validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
                 {({resetForm, values, setValues}) => (
@@ -429,7 +410,7 @@ export default () => {
 
                             </div>
 
-                            {JSON.stringify(values)}
+
                             <div className="text-end mt-3">
                                 <input className="btn px-5 btn-success" type="submit" value="submit"/>
                                 <button className="btn px-5 ms-2 btn-warning text-white" type="button"

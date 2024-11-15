@@ -22,7 +22,8 @@ export default function App({ Component, pageProps }) {
 
       </div>
 
-      {router.asPath.split("/").length>2?<SideZ><Component {...pageProps} /></SideZ>:<Component {...pageProps} />}
+      {/*{router.asPath.split("/").length>2?<SideZ><Component {...pageProps} /></SideZ>:<Component {...pageProps} />}*/}
+      <Component {...pageProps} />
 
 
   </>
