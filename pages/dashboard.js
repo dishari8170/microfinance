@@ -7,6 +7,7 @@ export default ()=>
     return <SideZ>
 
 
+
         <div className="row text-center" style={{fontSize: "1.3rem"}}>
 
 
