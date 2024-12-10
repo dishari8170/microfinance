@@ -110,7 +110,7 @@ mobile_section :["emi_collection_approve","loan_emi_collection","loan_non_emi","
         <div className="d-flex  overflow-x-hidden h-100">
 
 
-            <div id="sidebar" className="sidebar  xitem    mt-1" style={{backgroundColor:"#1a75a9"}}>
+            <div id="sidebar" className="sidebar  xitem   mt-1" style={{backgroundColor:"#1a75a9",minHeight:"100vh"}}>
 
 
 

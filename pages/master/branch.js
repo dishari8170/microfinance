@@ -1,11 +1,11 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import {ErrorMessage, Field, Form, Formik} from "formik";
+import {useEffect, useState} from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { FaEye, FaTrash } from "react-icons/fa";
+import {FaEye, FaTrash} from "react-icons/fa";
 
 import * as Yup from "yup";
-import { dh } from "@/lib/Dh";
+import {dh} from "@/lib/Dh";
 
 const validationSchema = Yup.object().shape({
     branchName: Yup.string().required("Branch Name is required"),
@@ -38,7 +38,7 @@ export default () => {
         fetchData();
     }, []);
 
-    const handleSubmit = async (values, { resetForm }) => {
+    const handleSubmit = async (values, {resetForm}) => {
         dh.loadx(true);
         try {
             const response = await fetch('/api/branches', {
@@ -88,63 +88,65 @@ export default () => {
                     validationSchema={validationSchema}
                 >
                     {({resetForm}) => (
-                        <Form className="border  border-dark  shadow-sm bg-white p-3" >
+                        <Form className="border  border-dark  shadow-sm bg-white p-3">
                             <div className="">
-                            <div className="row fw-bold mt-4">
+                                <div className="row fw-bold mt-4">
 
-                                <div className="col-md-3 mb-2">
-                                    <div>Branch Name</div>
-                                    <Field className="form-control mt-2" name="branchName"
-                                           placeholder="Enter Branch Name"/>
-                                    <ErrorMessage name="branchName" component="div" className="text-danger mt-2"/>
-                                </div>
+                                    <div className="col-md-3 mb-2">
+                                        <div>Branch Name</div>
+                                        <Field className="form-control mt-2" name="branchName"
+                                               placeholder="Enter Branch Name"/>
+                                        <ErrorMessage name="branchName" component="div" className="text-danger mt-2"/>
+                                    </div>
 
-                                <div className="col-md-3 mb-2">
-                                    <div>Manager Name</div>
-                                    <Field className="form-control mt-2" name="managerName"
-                                           placeholder="Enter Manager Name"/>
-                                    <ErrorMessage name="managerName" component="div" className="mt-2 text-danger"/>
-                                </div>
+                                    <div className="col-md-3 mb-2">
+                                        <div>Manager Name</div>
+                                        <Field className="form-control mt-2" name="managerName"
+                                               placeholder="Enter Manager Name"/>
+                                        <ErrorMessage name="managerName" component="div" className="mt-2 text-danger"/>
+                                    </div>
 
-                                <div className="col-md-3 mb-2">
-                                    <div>Branch Code</div>
-                                    <Field className="form-control mt-2" name="branchCode"
-                                           placeholder="Enter Branch Code"/>
-                                    <ErrorMessage name="branchCode" component="div" className="text-danger mt-2"/>
-                                </div>
+                                    <div className="col-md-3 mb-2">
+                                        <div>Branch Code</div>
+                                        <Field className="form-control mt-2" name="branchCode"
+                                               placeholder="Enter Branch Code"/>
+                                        <ErrorMessage name="branchCode" component="div" className="text-danger mt-2"/>
+                                    </div>
 
-                                <div className="col-md-3 mb-2">
-                                    <div>Prefix</div>
-                                    <Field className="form-control mt-2" name="prefix" placeholder="Enter Prefix"/>
-                                    <ErrorMessage name="prefix" component="div" className="text-danger mt-2"/>
-                                </div>
+                                    <div className="col-md-3 mb-2">
+                                        <div>Prefix</div>
+                                        <Field className="form-control mt-2" name="prefix" placeholder="Enter Prefix"/>
+                                        <ErrorMessage name="prefix" component="div" className="text-danger mt-2"/>
+                                    </div>
 
-                                <div className="col-md-3 mb-2">
-                                    <div>Address</div>
-                                    <Field className="form-control mt-2" name="address" placeholder="Enter Address"/>
-                                    <ErrorMessage name="address" component="div" className="text-danger mt-2"/>
-                                </div>
+                                    <div className="col-md-3 mb-2">
+                                        <div>Address</div>
+                                        <Field className="form-control mt-2" name="address"
+                                               placeholder="Enter Address"/>
+                                        <ErrorMessage name="address" component="div" className="text-danger mt-2"/>
+                                    </div>
 
-                                <div className="col-md-3 mb-2">
-                                    <div>Phone Number</div>
-                                    <Field className="form-control mt-2" name="phoneNumber"
-                                           placeholder="Enter Phone Number"/>
-                                    <ErrorMessage name="phoneNumber" component="div" className="text-danger mt-2"/>
-                                </div>
+                                    <div className="col-md-3 mb-2">
+                                        <div>Phone Number</div>
+                                        <Field className="form-control mt-2" name="phoneNumber"
+                                               placeholder="Enter Phone Number"/>
+                                        <ErrorMessage name="phoneNumber" component="div" className="text-danger mt-2"/>
+                                    </div>
 
-                                <div className="col-md-3 mb-2">
-                                    <div>Opening Date</div>
-                                    <Field type="date" className="form-control mt-2" name="openingDate"/>
-                                    <ErrorMessage name="openingDate" component="div" className="text-danger mt-2"/>
-                                </div>
+                                    <div className="col-md-3 mb-2">
+                                        <div>Opening Date</div>
+                                        <Field type="date" className="form-control mt-2" name="openingDate"/>
+                                        <ErrorMessage name="openingDate" component="div" className="text-danger mt-2"/>
+                                    </div>
 
-                                <div className="text-end mt-3">
-                                    <button className="btn px-5 btn-success" type="submit">Save</button>
-                                    <button className="btn px-5 ms-2 btn-warning text-white" type="button"
-                                            onClick={resetForm}>Clear
-                                    </button>
+                                    <div className="text-end mt-3">
+                                        <button className="btn px-5 btn-success" type="submit">Save</button>
+                                        <button className="btn px-5 ms-2 btn-warning text-white" type="button"
+                                                onClick={resetForm}>Clear
+                                        </button>
+                                    </div>
                                 </div>
-                            </div></div>
+                            </div>
                         </Form>
                     )}
                 </Formik>

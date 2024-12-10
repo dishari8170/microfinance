@@ -64,36 +64,40 @@ export default () => {
 
 
     const handleForgotPassword = () => {
-        Swal.fire({
-            title: 'Forgot Password',
-            text: 'Enter your email address to receive a reset link:',
-            input: 'email',
-            inputPlaceholder: 'Your email address',
-            showCancelButton: true,
-            confirmButtonText: 'Send',
-            cancelButtonText: 'Cancel',
-            icon:'info',
-            preConfirm: (email) => {
+        //
+        //
+        // Swal.fire({
+        //     title: 'Forgot Password',
+        //     text: 'Enter your email address to receive a reset link:',
+        //     input: 'email',
+        //     inputPlaceholder: 'Your email address',
+        //     showCancelButton: true,
+        //     confirmButtonText: 'Send',
+        //     cancelButtonText: 'Cancel',
+        //     icon:'info',
+        //     preConfirm: (email) => {
+        //
+        //         if (!email) {
+        //             Swal.showValidationMessage('Please enter a valid email address');
+        //         }
+        //
+        //         return new Promise((resolve) => {
+        //             setTimeout(() => {
+        //                 resolve();
+        //             }, 1000);
+        //         });
+        //     }
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         Swal.fire({
+        //             title: 'Success!',
+        //             text: 'A password reset link has been sent to your email.',
+        //             icon: 'success'
+        //         });
+        //     }
+        // });
 
-                if (!email) {
-                    Swal.showValidationMessage('Please enter a valid email address');
-                }
 
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1000);
-                });
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'A password reset link has been sent to your email.',
-                    icon: 'success'
-                });
-            }
-        });
     };
 
     return (
@@ -118,7 +122,7 @@ export default () => {
                             {({isSubmitting}) => (
                                 <Form>
                                     <div className="text-start mt-3 fw-bold">
-                                        Username
+                                        Phone Number
                                         <Field
                                             type="text"
                                             name="username"
@@ -128,7 +132,7 @@ export default () => {
                                         <ErrorMessage name="username" component="div" className="text-danger mt-2"/>
                                     </div>
                                     <div className="text-start mt-3 fw-bold">
-                                        Password
+                                        OTP
                                         <Field
                                             type="password"
                                             name="password"
@@ -142,8 +146,11 @@ export default () => {
                                             <Field type="checkbox" name="keepLoggedIn"/>
                                             <label>Keep me logged in</label>
                                         </div>
-                                        <a className="text-white" href="#" onClick={handleForgotPassword}>
-                                            Forgot Password?
+                                        <a className="btn btn-sm btn-primary" href="#" onClick={handleForgotPassword}>
+
+
+                                           Send OTP
+
                                         </a>
                                     </div>
                                     <button type="submit" className="w-100 btn btn-primary mt-4"

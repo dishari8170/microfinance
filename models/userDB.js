@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const presentAddressSchema = new mongoose.Schema({
+const presentAddressSchema ={
     village: String,
     post: String,
     block: String,
@@ -8,18 +8,18 @@ const presentAddressSchema = new mongoose.Schema({
     dist: String,
     state: String,
     pincode: String,
-});
+};
 
 
 const homeschema = new mongoose.Schema({
-parent_code :String,
+    parent :String,
     code:String,
     role :String,
     name: String,
     fatherName: String,
     motherName:String,
     guardianName: String,
-    mobileNo: String,
+    phone: String,
     dateOfBirth: String,
     email: String,
     presentAddress: presentAddressSchema,
@@ -42,6 +42,5 @@ parent_code :String,
 
 
 module.exports = mongoose.models.userDB || mongoose.model("userDB", homeschema);
-module.exports = mongoose.models.userDB || mongoose.model("userDB", documentschema);
 
 
