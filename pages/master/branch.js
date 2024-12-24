@@ -6,12 +6,12 @@ import {FaEye, FaTrash} from "react-icons/fa";
 
 import * as Yup from "yup";
 import {dh} from "@/lib/Dh";
+import SideMas from "@/Comp/SideMas";
 
 const validationSchema = Yup.object().shape({
     branchName: Yup.string().required("Branch Name is required"),
     managerName: Yup.string().required("Manager Name is required"),
-    branchCode: Yup.string().required("Branch Code is required"),
-    prefix: Yup.string().required("Prefix is required"),
+    code: Yup.string().required("Branch Code is required"),
     address: Yup.string().required("Address is required"),
     phoneNumber: Yup.string().required("Phone Number is required"),
     openingDate: Yup.date().required("Opening Date is required"),
@@ -71,14 +71,14 @@ export default () => {
     const currentData = submittedData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
     return (
-        <>
-            <div className="container">
+        <SideMas>
+            <div className="card p-4 ">
                 <div className="fw-medium" style={{fontSize: "30px"}}>Branch Information</div>
                 <Formik
                     initialValues={{
                         branchName: "",
                         managerName: "",
-                        branchCode: "",
+                        code: "",
                         prefix: "",
                         address: "",
                         phoneNumber: "",
@@ -108,16 +108,12 @@ export default () => {
 
                                     <div className="col-md-3 mb-2">
                                         <div>Branch Code</div>
-                                        <Field className="form-control mt-2" name="branchCode"
+                                        <Field className="form-control mt-2" name="code"
                                                placeholder="Enter Branch Code"/>
-                                        <ErrorMessage name="branchCode" component="div" className="text-danger mt-2"/>
+                                        <ErrorMessage name="code" component="div" className="text-danger mt-2"/>
                                     </div>
 
-                                    <div className="col-md-3 mb-2">
-                                        <div>Prefix</div>
-                                        <Field className="form-control mt-2" name="prefix" placeholder="Enter Prefix"/>
-                                        <ErrorMessage name="prefix" component="div" className="text-danger mt-2"/>
-                                    </div>
+
 
                                     <div className="col-md-3 mb-2">
                                         <div>Address</div>
@@ -157,58 +153,70 @@ export default () => {
                     <tr>
                         <th>Code</th>
                         <th>Branch Name</th>
-                        <th>Prefix</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     {currentData.map((data, index) => (
                         <tr key={index}>
-                            <td>{data.branchCode}</td>
+                            <td>{data.code}</td>
                             <td>{data.branchName}</td>
-                            <td>{data.prefix}</td>
                             <td>
-                                <div className="d-flex justify-content-center">
-                                    <div className="btn btn-success" onClick={() => {
-                                        const {
-                                            branchName,
-                                            managerName,
-                                            branchCode,
-                                            prefix,
-                                            address,
-                                            phoneNumber,
-                                            openingDate
-                                        } = data;
-                                        Swal.fire({
-                                            title: 'Branch Details',
-                                            html: `
+
+                                        <FaEye className="me-2 h1" onClick={() => {
+                                            const {
+                                                branchName,
+                                                managerName,
+                                                code,
+
+                                                address,
+                                                phoneNumber,
+                                                openingDate
+                                            } = data;
+                                            Swal.fire({
+                                                title: 'Branch Details',
+                                                html: `
                                                     <p><strong>Branch Name:</strong> ${branchName}</p>
                                                     <p><strong>Manager Name:</strong> ${managerName}</p>
-                                                    <p><strong>Branch Code:</strong> ${branchCode}</p>
-                                                    <p><strong>Prefix:</strong> ${prefix}</p>
+                                                    <p><strong>Branch Code:</strong> ${code}</p>
+                                                  
                                                     <p><strong>Address:</strong> ${address}</p>
                                                     <p><strong>Phone Number:</strong> ${phoneNumber}</p>
                                                     <p><strong>Opening Date:</strong> ${openingDate}</p>
                                                 `,
-                                            confirmButtonText: 'Close'
-                                        });
-                                    }}>
-                                        <FaEye className="me-2" style={{fontSize: "25px"}}/>View
-                                    </div>
-
-                                    <div className="btn btn-danger ms-3" onClick={() => {
-                                        axios.delete(`/api/branches?id=${data._id}`)
-                                            .then(() => {
-                                                fetchData();
-                                            })
-                                            .catch(error => {
-                                                console.error('Error deleting branch:', error);
-                                                Swal.fire('Error', 'Could not delete branch.', 'error');
+                                                confirmButtonText: 'Close'
                                             });
-                                    }}>
-                                        <FaTrash className="me-2" style={{fontSize: "25px"}}/>Delete
-                                    </div>
-                                </div>
+                                        }}/>
+
+
+                                        <FaTrash className="ms-4 h1 text-danger" onClick={(o)=>{
+
+
+                                            Swal.fire(
+                                            {
+                                              title:"Do you want to delete"  ,
+                                                icon:"question",
+                                                showCancelButton:true,
+                                                showConfirmButton:true,
+                                                async preConfirm(inputValue) {
+
+                                                    await axios.delete("/api/branches?id=" + data._id)
+                                                }
+                                            }).then(c=>{
+
+
+                                                if (c.isConfirmed){
+
+                                                    Swal.fire({icon:"success",title:"branch deleted"}).then(y=>{
+
+                                                        window.location.reload();
+                                                    })
+                                                }
+                                            })
+                                        }}/>
+
+
+
                             </td>
                         </tr>
                     ))}
@@ -226,6 +234,6 @@ export default () => {
                     </div>
                 </div>
             </div>
-        </>
+        </SideMas>
     );
 };

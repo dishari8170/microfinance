@@ -5,10 +5,10 @@ import {useRouter} from "next/router";
 import Swal from "sweetalert2";
 import {FaDownload, FaEye, FaPenAlt, FaStar, FaTrash} from "react-icons/fa";
 import SideZ from "@/Comp/SideZ";
-import SideEmp from "@/Comp/SideMas";
+import SideEmp from "@/Comp/SideEmp";
 
 
-export default function AgentsEmp() {
+export default function MembersEmp() {
 
 
     //
@@ -23,7 +23,7 @@ export default function AgentsEmp() {
 
     function loaddataU(s = "0") {
 
-        axios.get("/api/user?role=Agent&limit=10&pro=_id," + pro + "&skip=" + s + "&search=" + searchtext + "&on="+cat).then(value => {
+        axios.get("/api/user?role=Member&limit=10&pro=_id," + pro + "&skip=" + s + "&search=" + searchtext + "&on="+cat).then(value => {
 
             setc(value.data.total);
 
@@ -79,11 +79,11 @@ export default function AgentsEmp() {
                     </div>
                     <div className="col-md-3 col-6 d-flex align-items-center justify-content-between">
 
-                        <div className="d-none d-lg-flex align-items-center h2 text-white "><FaStar className="me-2"/>Agents</div>
+                        <div className="d-none d-lg-flex align-items-center h2 text-white "><FaStar className="me-2"/>Members</div>
                         <div className=""></div>
                         <div className="btn btn-primary float-end" onClick={u => {
 
-                            window.location.href = "/master/user?role=Agent&add=new"
+                            window.location.href = "/master/user?role=Member&add=new"
                         }}>Add
                         </div>
 
@@ -123,33 +123,33 @@ export default function AgentsEmp() {
                         <td>{data.email}</td>
                         <td className="">
                             <div className="d-flex justify-content-center align-items-center">
-                                <div className="btn btn-danger mx-2" onClick={async r => {
+                                {/*<div className="btn btn-danger mx-2" onClick={async r => {*/}
 
-                                    await Swal.fire({
+                                {/*    await Swal.fire({*/}
 
-                                        showConfirmButton: true,
-                                        icon: "question",
-                                        showCancelButton: true,
-                                        title: "Are you sure?",
+                                {/*        showConfirmButton: true,*/}
+                                {/*        icon: "question",*/}
+                                {/*        showCancelButton: true,*/}
+                                {/*        title: "Are you sure?",*/}
 
-                                        preConfirm() {
-                                            axios.delete(`/api/user?_id=${data._id}`).then(() => {
-                                                router.reload()
-                                            })
-                                        }
-                                    })
+                                {/*        preConfirm() {*/}
+                                {/*            axios.delete(`/api/user?_id=${data._id}`).then(() => {*/}
+                                {/*                router.reload()*/}
+                                {/*            })*/}
+                                {/*        }*/}
+                                {/*    })*/}
 
 
-                                }}><FaTrash/></div>
-                                <a href={`/master/user?role=Agent&view=true&_id=${data._id}`}>
+                                {/*}}><FaTrash/></div>*/}
+                                <a href={`/master/user?role=Member&view=true&code=${data.code}`}>
                                     <div className="btn btn-success mx-2"><FaEye/></div>
                                 </a>
-                                <a href={`/master/user?role=Agent&_id=${data._id}`}>
-                                    <div className="btn btn-primary mx-2"><FaPenAlt/>
-                                    </div>
+                                {/*<a href={`/master/user?role=Member&_id=${data._id}`}>*/}
+                                {/*    <div className="btn btn-primary mx-2"><FaPenAlt/>*/}
+                                {/*    </div>*/}
 
-                                </a>
-                                <a href={`/api/Agent_arg?code=${data.code}`}>
+                                {/*</a>*/}
+                                <a href={`/api/Member_arg?code=${data.code}`}>
                                     <div className="btn btn-primary mx-2"><FaDownload/>
                                     </div>
 

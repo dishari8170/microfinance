@@ -5,7 +5,7 @@ import {useRouter} from "next/router";
 import Swal from "sweetalert2";
 import {FaDownload, FaEye, FaPenAlt, FaStar, FaTrash} from "react-icons/fa";
 import SideZ from "@/Comp/SideZ";
-import SideEmp from "@/Comp/SideMas";
+import SideEmp from "@/Comp/SideEmp";
 
 
 export default function AgentsEmp() {
@@ -123,32 +123,32 @@ export default function AgentsEmp() {
                         <td>{data.email}</td>
                         <td className="">
                             <div className="d-flex justify-content-center align-items-center">
-                                <div className="btn btn-danger mx-2" onClick={async r => {
+                                {/*<div className="btn btn-danger mx-2" onClick={async r => {*/}
 
-                                    await Swal.fire({
+                                {/*    await Swal.fire({*/}
 
-                                        showConfirmButton: true,
-                                        icon: "question",
-                                        showCancelButton: true,
-                                        title: "Are you sure?",
+                                {/*        showConfirmButton: true,*/}
+                                {/*        icon: "question",*/}
+                                {/*        showCancelButton: true,*/}
+                                {/*        title: "Are you sure?",*/}
 
-                                        preConfirm() {
-                                            axios.delete(`/api/user?_id=${data._id}`).then(() => {
-                                                router.reload()
-                                            })
-                                        }
-                                    })
+                                {/*        preConfirm() {*/}
+                                {/*            axios.delete(`/api/user?_id=${data._id}`).then(() => {*/}
+                                {/*                router.reload()*/}
+                                {/*            })*/}
+                                {/*        }*/}
+                                {/*    })*/}
 
 
-                                }}><FaTrash/></div>
-                                <a href={`/master/user?role=Agent&view=true&_id=${data._id}`}>
+                                {/*}}><FaTrash/></div>*/}
+                                <a href={`/master/user?role=Agent&view=true&code=${data.code}`}>
                                     <div className="btn btn-success mx-2"><FaEye/></div>
                                 </a>
-                                <a href={`/master/user?role=Agent&_id=${data._id}`}>
-                                    <div className="btn btn-primary mx-2"><FaPenAlt/>
-                                    </div>
+                                {/*<a href={`/master/user?role=Agent&_id=${data._id}`}>*/}
+                                {/*    <div className="btn btn-primary mx-2"><FaPenAlt/>*/}
+                                {/*    </div>*/}
 
-                                </a>
+                                {/*</a>*/}
                                 <a href={`/api/Agent_arg?code=${data.code}`}>
                                     <div className="btn btn-primary mx-2"><FaDownload/>
                                     </div>

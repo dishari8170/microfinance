@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import Swal from "sweetalert2";
 import React, {useState} from "react";
 import {Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip} from "recharts";
+import SideEmp from "@/Comp/SideEmp";
 
 function calculateLoanDetailss(amount, type, interestRate, interestType, totalPeriods) {
     let finalAmount = 0;
@@ -430,7 +431,7 @@ export default () => {
 
     const docstype = {bank_stetment_2_year: {type: "file"}, bank_stetment_1_year: {type: "file"}}
 
-    return <>
+    return <SideEmp>
 
         <Formik
             initialValues={{
@@ -591,6 +592,6 @@ export default () => {
         </Formik>
 
 
-    </>
+    </SideEmp>
 }
 

@@ -3,10 +3,13 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/router';
+import axios from "axios";
+
 
 export default () => {
     const [loginError, setLoginError] = useState('');
     const router = useRouter();
+    const [getOtp, setOtp] = useState(121);
 
     const validationSchema = Yup.object().shape({
         username: Yup.string().required('Username is required'),
@@ -14,9 +17,11 @@ export default () => {
     });
 
     const handleSubmit = async (values) => {
-        const { username, password } = values;
 
+        const { username, password } = values;
+        
         try {
+
             const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
@@ -27,9 +32,9 @@ export default () => {
 
             const data = await response.json();
 
-            if (response.ok) {
+            if (data.role) {
 
-                localStorage.setItem('userRole', data.role);
+                // localStorage.setItem('userRole', data.role);
 
                 Swal.fire({
                     title: 'Success!',
@@ -37,7 +42,16 @@ export default () => {
                     icon: 'success',
                     confirmButtonText: 'Okay'
                 }).then(() => {
-                    router.push(`/dashboard?role=${data.role}`);
+
+                    if (data.role==="Agent"){
+                        router.push(`/agent`);
+                    }
+                    if (data.role==="Employee"){
+                        router.push(`/employee`);
+                    }   if (data.role==="Admin"){
+                        router.push(`/master`);
+                    }
+
                 });
             } else {
                 Swal.fire({
@@ -48,7 +62,7 @@ export default () => {
                 });
             }
         } catch (error) {
-            Swal.fire({
+            await Swal.fire({
                 title: 'Error!',
                 text: 'Something went wrong. Please try again later.',
                 icon: 'error',
@@ -57,13 +71,66 @@ export default () => {
         }
     };
 
-
-
-
-
-
-
     const handleForgotPassword = () => {
+
+        const phone=document.getElementById("otpx");
+        const phonex=document.getElementById("phone");
+
+        if (phone.disabled){
+            Swal.fire({icon:"warning",title:"please wait",text:"Otp Already sent please Wait to resend.."});
+            return;
+        }
+        phone.disabled=true;
+
+        const otptime = (intx)=> setTimeout(() => {
+
+            console.log("dfghj" + intx);
+
+            if (intx >1) {
+
+                phone.innerText = "Resend OTP in "+(intx-1)+"s";
+                otptime(intx-1)
+            }else {
+                phone.disabled=false;
+                phone.innerText="Send OTP"
+
+            }
+
+
+        }, 1000);
+
+
+
+        // otptime(10)
+
+        axios.get('/api/send_otp?phone='+phonex.value).then(O=>{
+
+            Swal.fire({icon:"success",text:"Otp Sent Successfully! ",title:"Sent"});
+
+        });
+
+
+
+
+
+            // if (getOtp<1){
+            //
+            //     setOtp(121);
+            //     clearInterval(otptime);
+            //
+            //
+            //
+            //
+            //
+            // }else {
+            //
+            //     setOtp((getOtp-1));
+            // }
+
+        // },1000)
+
+        // axios.get("/api/getotp?phone=" + phone)
+
         //
         //
         // Swal.fire({
@@ -126,6 +193,7 @@ export default () => {
                                         <Field
                                             type="text"
                                             name="username"
+                                            id="phone"
                                             placeholder=""
                                             className="form-control mt-2"
                                         />
@@ -143,13 +211,14 @@ export default () => {
                                     </div>
                                     <div className="d-flex justify-content-between mt-3">
                                         <div>
-                                            <Field type="checkbox" name="keepLoggedIn"/>
+                                            <Field type="checkbox" name="keepLoggedIn" />
                                             <label>Keep me logged in</label>
                                         </div>
-                                        <a className="btn btn-sm btn-primary" href="#" onClick={handleForgotPassword}>
+                                         <a className="btn btn-sm btn-primary" href="#" id={"otpx"}
+                                                             onClick={handleForgotPassword}>
 
 
-                                           Send OTP
+                                            Send OTP
 
                                         </a>
                                     </div>

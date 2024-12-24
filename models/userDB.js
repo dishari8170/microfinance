@@ -22,6 +22,7 @@ const homeschema = new mongoose.Schema({
     phone: String,
     dateOfBirth: String,
     email: String,
+    otp:String,
     presentAddress: presentAddressSchema,
     permanentAddress: presentAddressSchema,
     identityProof: String,
@@ -36,6 +37,7 @@ const homeschema = new mongoose.Schema({
     address_back: String,
     photo: String,
     signature : String,
+    isActive : Boolean,
 });
 
 

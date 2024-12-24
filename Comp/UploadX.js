@@ -25,7 +25,7 @@ export default (prop)=>{
         let f = new FormData()
         f.append("file", file);
         try {
-            const Response = await axios.post(`${dh.api}/api/upload`, f,{
+            const Response = await axios.post(`${dh.api}/upload`, f,{
 
                 onUploadProgress(r){
                     setprogressX(  r.progress);

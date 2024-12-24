@@ -1,11 +1,10 @@
-// Load our library that generates the document
-import Docxtemplater from "docxtemplater";
-// Load PizZip library to load the docx/pptx/xlsx file in memory
-import PizZip from "pizzip";
 
+import {patchDocument, Packer, Paragraph, TextRun, PatchType} from "docx";
 // Builtin file system utilities
 import fs from "fs";
 import  path from "path";
+import dbConnect from "@/lib/dbConnect";
+import userDB from "@/models/userDB";
 
 
 
@@ -16,45 +15,63 @@ import  path from "path";
 export default async (req, res) => {
 
 
-// Load the docx file as binary content
-    const content = fs.readFileSync(
-        path.resolve(__dirname, "../"),
+    await dbConnect();
+
+
+  const  user=await userDB.findOne({code: req.query.code});
+
+
+  // res.status(200).json(user);
+  // return;
+    const today = new Date();
+
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+
+    const formattedDate = `${day}/${month}/${year}`;
+
+
+    const inputBuffer = fs.readFileSync("/var/www/html/public/AGENT AGREEMENtXY.docx",
         "binary"
     );
 
-// Unzip the content of the file
-    const zip = new PizZip(content);
 
-// Parse the template.
-// This function throws an error if the template is invalid,
-// for example, if the template is "Hello {user" (missing closing tag)
-    const doc = new Docxtemplater(zip, {
-        paragraphLoop: true,
-        linebreaks: true,
+    const doc = await patchDocument({outputType: "nodebuffer", data: inputBuffer,
+
+
+        patches:{
+            name:{
+                type: PatchType.PARAGRAPH,
+                children:[new TextRun(user.name)]
+            },
+            date:{
+                type: PatchType.PARAGRAPH,
+                children:[new TextRun(formattedDate)]
+            } ,
+            father_name:{
+                type: PatchType.PARAGRAPH,
+                children:[new TextRun(user.fatherName	)]
+            },
+            address:{
+                type: PatchType.PARAGRAPH,
+                children:[new TextRun(Object.values(user.presentAddress).join(", ")	)]
+            },
+            sex:{
+                type: PatchType.PARAGRAPH,
+                children:[new TextRun("male")]
+            }
+        },
+        keepOriginalStyles:true
+
     });
 
-// Render the document : Replaces :
-// - {first_name} with John
-// - {last_name} with Doe,
-// ...
-    doc.render({
-        first_name: "John",
-        last_name: "Doe",
-        phone: "+33666666",
-        description: "The Acme Product",
-    });
+    //
+    // replaceTextInParagraphs(doc.paragraphs, oldSentence, newSentence);
 
-// Get the document as a zip (docx are zipped files)
-// and generate it as a Node.js buffer
-    const buf = doc.getZip().generate({
-        type: "nodebuffer",
-        // Compression: DEFLATE adds a compression step.
-        // For a 50MB document, expect 500ms additional CPU time.
-        compression: "DEFLATE",
-    });
+    res.setHeader('Content-Disposition', `attachment; filename="Agent Agreement.docx"`);
 
-
-    res.status(200).send(buf);
+    res.status(200).send(doc);
 }
 // Write the Node.js Buffer to a file
 

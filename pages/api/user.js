@@ -16,7 +16,7 @@ export default async (req, res) => {
             userCode += characters[randomIndex];
         }
 
-        const mi = await userDB.findOne({user_code: userCode})
+        const mi = await userDB.findOne({code: userCode})
         if (mi) {
 
             console.log("aaaaaaaaaaaaaaaa")
@@ -53,6 +53,9 @@ export default async (req, res) => {
         }
         else if (req.query._id){
             const t = await userDB.findOne({_id: req.query._id})
+            return res.status(200).json(t)
+        }   else if (req.query.code){
+            const t = await userDB.findOne({code: req.query.code})
             return res.status(200).json(t)
         }
 

@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import Swal from "sweetalert2";
 import React, {useState} from "react";
 import {Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip} from "recharts";
+import SideEmp from "@/Comp/SideMas";
 
 function calculateLoanDetailss(amount, type, interestRate, interestType, totalPeriods) {
     let finalAmount = 0;
@@ -240,7 +241,7 @@ function calculateEMI(amount, type, interestRate, interestType, totalPeriods) {
             totalInterest+=intrest;
 
             if (totalPeriods>remainingPrincipal){
-                payment = totalPeriods-intrest
+                payment = remainingPrincipal-intrest
                 remainingPrincipal = 0;
 
                 console.log("imharexx")
@@ -256,6 +257,7 @@ function calculateEMI(amount, type, interestRate, interestType, totalPeriods) {
             finalAmount+=payment;
 
             periodicDetails.push({
+                totalInterest: (intrest+payment).toFixed(2),
                 interest: intrest.toFixed(2),
                 payment: (payment).toFixed(2),
                 remainingPrincipal: remainingPrincipal.toFixed(2),
@@ -368,7 +370,7 @@ const LoanResult = (prop) => {
 
                     {prop.data.periodicDetails?.map((vp, ind) =>
                         <tr>
-                            <td>₹{JSON.stringify(vp)}</td>
+                            <td>₹{vp.totalInterest}</td>
                             <td>₹{vp.interest}</td>
                             <td>₹{vp.payment}</td>
                             <td>₹{vp.remainingPrincipal}</td>
@@ -430,7 +432,7 @@ export default () => {
 
     const docstype = {bank_stetment_2_year: {type: "file"}, bank_stetment_1_year: {type: "file"}}
 
-    return <>
+    return <SideEmp>
 
         <Formik
             initialValues={{
@@ -591,6 +593,6 @@ export default () => {
         </Formik>
 
 
-    </>
+    </SideEmp>
 }
 

@@ -19,7 +19,7 @@ const validationSchema = Yup.object().shape({
     dateOfBirth: Yup.date()
         .required('Date of birth is required')
         .max(new Date(), 'Date of birth cannot be in the future'),
-    email: Yup.string().email('Invalid email format').required('Email is required'),
+    // email: Yup.string().email('Invalid email format').required('Email is required'),
     presentAddress: Yup.object().shape({
         village: Yup.string().required('Village is required'),
         post: Yup.string().required('Post is required'),
@@ -58,7 +58,7 @@ export default () => {
 
     const fetchUserCode = async () => {
         try {
-            const response = await axios.get("/api/user?dia=4");
+            const response = await axios.get("/api/user?dia=9");
 
 
 
@@ -70,7 +70,7 @@ export default () => {
 
     const fetchData = async (id) => {
         try {
-            const response = await axios.get(`/api/user?_id=${id}`);
+            const response = await axios.get("/api/user?code=" + id );
 
             setValuesx( response.data);
 
@@ -86,7 +86,7 @@ export default () => {
         await axios.post(`/api/user`, values).then(vl => {
 
             if (vl.data.stat === "ok") {
-                Swal.fire("Done", vl.data.msg, "success").then(() => {
+                Swal.fire("Done", "Data Updated Successfully", "success").then(() => {
 
 
                     router.back();
@@ -157,12 +157,16 @@ const [readOnly, setReadOnly] = useState(false);
 
         if (router.query.role) {
 
+
+
             console.log(valuesx)
             setRole(router.query.role);
             const ty=valuesx;
             ty.role=router.query.role;
             setValuesx(ty);
-            if (router.query.view) {
+            if (router.query.editx || (router.query.add && router.query.code==null )){
+                setReadOnly(false)
+            }else {
                 setReadOnly(true)
             }
 
@@ -170,11 +174,11 @@ const [readOnly, setReadOnly] = useState(false);
             return;
         }
 
-        if (router.query._id) {
+        if (router.query.code) {
 
 
 
-            fetchData(router.query._id)
+            fetchData(router.query.code)
 
         } else {
 
@@ -206,6 +210,13 @@ const [readOnly, setReadOnly] = useState(false);
                                 <Field  className="form-control mt-2" name="code" disabled/>
 
                             </div>
+                            <div className="col-md-3 mb-2">
+                                <div>{values.role.toLowerCase().includes("employee")?"Branch Code":"Supervisor Code"}</div>
+                                <Field disabled={readOnly} className="form-control mt-2" name="parent" />
+                                <ErrorMessage name="parent" component="div" className="text-danger mt-2"/>
+                            </div>
+
+
                             <div className="col-md-3 mb-2">
                                 <div>Name</div>
                                 <Field disabled={readOnly} className="form-control mt-2" name="name" placeholder="Enter your name"/>
@@ -431,6 +442,8 @@ const [readOnly, setReadOnly] = useState(false);
                                        placeholder="Enter Address Proof Number"/>
                                 <ErrorMessage name="addressProofNumber" component="div" className="text-danger mt-2"/>
                             </div>
+
+                            
                             <div className="row mt-2">
                                 <div className="col-md-6  col-lg-4">Identity Proof Font Page
                                     {readOnly?<a href={dh.ImUrl+values.identity_font}>

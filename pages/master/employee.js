@@ -8,7 +8,7 @@ import SideZ from "@/Comp/SideZ";
 import SideEmp from "@/Comp/SideMas";
 
 
-export default function AgentsEmp() {
+export default function EmployeesEmp() {
 
 
     //
@@ -23,7 +23,7 @@ export default function AgentsEmp() {
 
     function loaddataU(s = "0") {
 
-        axios.get("/api/user?role=Agent&limit=10&pro=_id," + pro + "&skip=" + s + "&search=" + searchtext + "&on="+cat).then(value => {
+        axios.get("/api/user?role=Employee&limit=10&pro="+ pro + "&skip=" + s + "&search=" + searchtext + "&on="+cat).then(value => {
 
             setc(value.data.total);
 
@@ -79,11 +79,11 @@ export default function AgentsEmp() {
                     </div>
                     <div className="col-md-3 col-6 d-flex align-items-center justify-content-between">
 
-                        <div className="d-none d-lg-flex align-items-center h2 text-white "><FaStar className="me-2"/>Agents</div>
+                        <div className="d-none d-lg-flex align-items-center h2 text-white "><FaStar className="me-2"/>Employees</div>
                         <div className=""></div>
                         <div className="btn btn-primary float-end" onClick={u => {
 
-                            window.location.href = "/master/user?role=Agent&add=new"
+                            window.location.href = "/master/user?role=Employee&add=new"
                         }}>Add
                         </div>
 
@@ -101,6 +101,7 @@ export default function AgentsEmp() {
                         <th scope="col">Photo</th>
                         <th scope="col">ID</th>
                         <th scope="col">Name</th>
+                        <th scope="col">Branch</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
                         <th scope="col">Action</th>
@@ -119,6 +120,7 @@ export default function AgentsEmp() {
                                  }}/></td>
                         <td>{data.code}</td>
                         <td>{data.name}</td>
+                        <td>{data.parent}</td>
                         <td>{data.phone}</td>
                         <td>{data.email}</td>
                         <td className="">
@@ -133,7 +135,7 @@ export default function AgentsEmp() {
                                         title: "Are you sure?",
 
                                         preConfirm() {
-                                            axios.delete(`/api/user?_id=${data._id}`).then(() => {
+                                            axios.delete(`/api/user?code=${data.code}`).then(() => {
                                                 router.reload()
                                             })
                                         }
@@ -141,15 +143,15 @@ export default function AgentsEmp() {
 
 
                                 }}><FaTrash/></div>
-                                <a href={`/master/user?role=Agent&view=true&_id=${data._id}`}>
+                                <a href={`/master/user?role=Employee&view=true&code=${data.code}`}>
                                     <div className="btn btn-success mx-2"><FaEye/></div>
                                 </a>
-                                <a href={`/master/user?role=Agent&_id=${data._id}`}>
+                                <a href={`/master/user?role=Employee&code=${data.code}&editx=true`}>
                                     <div className="btn btn-primary mx-2"><FaPenAlt/>
                                     </div>
 
                                 </a>
-                                <a href={`/api/Agent_arg?code=${data.code}`}>
+                                <a href={`/api/Employee_arg?code=${data.code}`}>
                                     <div className="btn btn-primary mx-2"><FaDownload/>
                                     </div>
 
