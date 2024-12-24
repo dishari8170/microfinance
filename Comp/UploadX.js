@@ -25,7 +25,7 @@ export default (prop)=>{
         let f = new FormData()
         f.append("file", file);
         try {
-            const Response = await axios.post(`${dh.api}/api/upload`, f,{
+            const Response = await axios.post(`${dh.api}/upload`, f,{
 
                 onUploadProgress(r){
                     setprogressX(  r.progress);
@@ -62,12 +62,13 @@ export default (prop)=>{
     return <div style={prop.style} className={prop.className}>
 
 
-        <div className="d-flex justify-content-center">
-        <img className="" src={dh.ImUrl+ (getdp??"dp.png")} style={{objectFit:"scale-down"}} height={prop.height} width={prop.width}/>
+        {prop.ofile?<></>:<div className="d-flex justify-content-center">
+            <img className="" src={dh.ImUrl + (getdp ?? "dp.png")} style={{objectFit: "scale-down"}}
+                 height={prop.height} width={prop.width} alt={"" + getdp ?? "dp.png"}/>
 
-        </div>
+        </div>}
 
-        <input type="file" onChange={hadlser} className="w-100 form-control"/>
+        <input type="file"  onChange={hadlser} className="w-100 form-control"/>
 
 
         { ( progressX >0  && progressX< 1 ) ?<div className="text-center bg-success" style={{width: (progressX*100)+"%"}}>

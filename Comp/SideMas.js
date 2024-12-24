@@ -27,19 +27,17 @@ export default ( {children})=>{
 
 
     const listx={
-        master:["branch_master","career_master","configuaration","dashboard","director_master","directorr_master","employ","group_master","ledger_master","loancal","menu_master","photo","rank_and_designation","relation_master","user_master","year_master"],
 
-        accounts:["balance_sheet","bank_book","bank_deposit","bank_withdrawal","cash_book","contra_voucher","day_book","journal_entry","journal_voucher","ledger","payment_voucher","profit_loss","receive_voucher","trail_balance"],
-mobile_section :["emi_collection_approve","loan_emi_collection","loan_non_emi","masa","member_joining_approve","member_report","non_emi_approvee","sb_transaction_approve"],
-   report:[
-       "agent_collection_branch","agent_collection_code","agent_collection_rank","agesnt_phone_list","agent_rank_list","agent_self_collection","business.report","business_planwise","business_summery","cheque_status","emi_collection","emi_due","emi_report","joining_report","loan_approve","loan_disbursement","loan_outstanding","loan_over_due","loan_requisition"
-   ],
-        loan_section: [ "group_loan_approve","group_loan_sheet","group_wise_repay","grouploan_requisition","groupwise_emi","loanapproval","loanclosed_report","loancollection_report","loandisbursement","loanledger","loannoc_print","loanpart_payment","loanrepayment","loanrepayment_advanced","loansearch","loansettelmet","personal_loan","personalloan_requisition"],
+        "DashBoard":[],
+        "Branch":[],
+        "Employee":[],
+        "Agents":[],
+        "Members":[],
+"Transaction":[],
+        "Loan":[],
+        "Saving":[],
+        "Calculator":[]
 
-       agent: ["agent_chain","agent_downline","agent_motion","agent_printing","block_agent","search_agent"],
-
-       voucher: ["voucher_list",
-           "voucher_print"],
 
     }
 
@@ -120,7 +118,7 @@ mobile_section :["emi_collection_approve","loan_emi_collection","loan_non_emi","
 
                     {Object.entries(listx).map(([keyx, valuex]) => <li key={keyx}>
 
-                            <div className="d-flex  justify-content-between " style={{backgroundColor: "#f2691e",}}
+                            <div className="d-flex  justify-content-between  mt-2 btn-outline-secondary" style={{backgroundColor: "#f2691e",}}
                                  onClick={(p) => {
 
                                      const tp = pathx;
@@ -137,14 +135,16 @@ mobile_section :["emi_collection_approve","loan_emi_collection","loan_non_emi","
                                      setpathx([...tp]);
                                  }}>
 
-                                <div className="text-white">{keyx.toLocaleUpperCase()}</div>
 
 
-                                <div className="text-white">{pathx[1] == keyx ? "-" : "+"}</div>
+                                {valuex.length===0?<a href={"/master/"+(keyx==="DashBoard"?"":keyx.toLowerCase())} className={"text-decoration-none"}> <div className="text-white">{keyx.toLocaleUpperCase()}</div></a>:
+                                    <div className="text-white">{keyx.toLocaleUpperCase()}</div>
+                                }
 
+                                <div className="text-white">{pathx[1] === keyx ? "-" : "+"}</div>
 
                             </div>
-                            <ul className={pathx[1] == keyx ? "" : "collapse"}>
+                            <ul className={pathx[1] === keyx ? "" : "collapse"}>
                                 {valuex.map((o) => {
 
                                     return <a key={o} href={"/" + keyx + "/" + o} className="text-decoration-none">

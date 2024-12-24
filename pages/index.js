@@ -3,10 +3,13 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/router';
+import axios from "axios";
+
 
 export default () => {
     const [loginError, setLoginError] = useState('');
     const router = useRouter();
+    const [getOtp, setOtp] = useState(121);
 
     const validationSchema = Yup.object().shape({
         username: Yup.string().required('Username is required'),
@@ -14,9 +17,11 @@ export default () => {
     });
 
     const handleSubmit = async (values) => {
-        const { username, password } = values;
 
+        const { username, password } = values;
+        
         try {
+
             const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
@@ -27,9 +32,9 @@ export default () => {
 
             const data = await response.json();
 
-            if (response.ok) {
+            if (data.role) {
 
-                localStorage.setItem('userRole', data.role);
+                // localStorage.setItem('userRole', data.role);
 
                 Swal.fire({
                     title: 'Success!',
@@ -37,7 +42,16 @@ export default () => {
                     icon: 'success',
                     confirmButtonText: 'Okay'
                 }).then(() => {
-                    router.push(`/dashboard?role=${data.role}`);
+
+                    if (data.role==="Agent"){
+                        router.push(`/agent`);
+                    }
+                    if (data.role==="Employee"){
+                        router.push(`/employee`);
+                    }   if (data.role==="Admin"){
+                        router.push(`/master`);
+                    }
+
                 });
             } else {
                 Swal.fire({
@@ -48,7 +62,7 @@ export default () => {
                 });
             }
         } catch (error) {
-            Swal.fire({
+            await Swal.fire({
                 title: 'Error!',
                 text: 'Something went wrong. Please try again later.',
                 icon: 'error',
@@ -57,43 +71,100 @@ export default () => {
         }
     };
 
-
-
-
-
-
-
     const handleForgotPassword = () => {
-        Swal.fire({
-            title: 'Forgot Password',
-            text: 'Enter your email address to receive a reset link:',
-            input: 'email',
-            inputPlaceholder: 'Your email address',
-            showCancelButton: true,
-            confirmButtonText: 'Send',
-            cancelButtonText: 'Cancel',
-            icon:'info',
-            preConfirm: (email) => {
 
-                if (!email) {
-                    Swal.showValidationMessage('Please enter a valid email address');
-                }
+        const phone=document.getElementById("otpx");
+        const phonex=document.getElementById("phone");
 
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1000);
-                });
+        if (phone.disabled){
+            Swal.fire({icon:"warning",title:"please wait",text:"Otp Already sent please Wait to resend.."});
+            return;
+        }
+        phone.disabled=true;
+
+        const otptime = (intx)=> setTimeout(() => {
+
+            console.log("dfghj" + intx);
+
+            if (intx >1) {
+
+                phone.innerText = "Resend OTP in "+(intx-1)+"s";
+                otptime(intx-1)
+            }else {
+                phone.disabled=false;
+                phone.innerText="Send OTP"
+
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'A password reset link has been sent to your email.',
-                    icon: 'success'
-                });
-            }
+
+
+        }, 1000);
+
+
+
+        // otptime(10)
+
+        axios.get('/api/send_otp?phone='+phonex.value).then(O=>{
+
+            Swal.fire({icon:"success",text:"Otp Sent Successfully! ",title:"Sent"});
+
         });
+
+
+
+
+
+            // if (getOtp<1){
+            //
+            //     setOtp(121);
+            //     clearInterval(otptime);
+            //
+            //
+            //
+            //
+            //
+            // }else {
+            //
+            //     setOtp((getOtp-1));
+            // }
+
+        // },1000)
+
+        // axios.get("/api/getotp?phone=" + phone)
+
+        //
+        //
+        // Swal.fire({
+        //     title: 'Forgot Password',
+        //     text: 'Enter your email address to receive a reset link:',
+        //     input: 'email',
+        //     inputPlaceholder: 'Your email address',
+        //     showCancelButton: true,
+        //     confirmButtonText: 'Send',
+        //     cancelButtonText: 'Cancel',
+        //     icon:'info',
+        //     preConfirm: (email) => {
+        //
+        //         if (!email) {
+        //             Swal.showValidationMessage('Please enter a valid email address');
+        //         }
+        //
+        //         return new Promise((resolve) => {
+        //             setTimeout(() => {
+        //                 resolve();
+        //             }, 1000);
+        //         });
+        //     }
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         Swal.fire({
+        //             title: 'Success!',
+        //             text: 'A password reset link has been sent to your email.',
+        //             icon: 'success'
+        //         });
+        //     }
+        // });
+
+
     };
 
     return (
@@ -118,17 +189,18 @@ export default () => {
                             {({isSubmitting}) => (
                                 <Form>
                                     <div className="text-start mt-3 fw-bold">
-                                        Username
+                                        Phone Number
                                         <Field
                                             type="text"
                                             name="username"
+                                            id="phone"
                                             placeholder=""
                                             className="form-control mt-2"
                                         />
                                         <ErrorMessage name="username" component="div" className="text-danger mt-2"/>
                                     </div>
                                     <div className="text-start mt-3 fw-bold">
-                                        Password
+                                        OTP
                                         <Field
                                             type="password"
                                             name="password"
@@ -139,11 +211,15 @@ export default () => {
                                     </div>
                                     <div className="d-flex justify-content-between mt-3">
                                         <div>
-                                            <Field type="checkbox" name="keepLoggedIn"/>
+                                            <Field type="checkbox" name="keepLoggedIn" />
                                             <label>Keep me logged in</label>
                                         </div>
-                                        <a className="text-white" href="#" onClick={handleForgotPassword}>
-                                            Forgot Password?
+                                         <a className="btn btn-sm btn-primary" href="#" id={"otpx"}
+                                                             onClick={handleForgotPassword}>
+
+
+                                            Send OTP
+
                                         </a>
                                     </div>
                                     <button type="submit" className="w-100 btn btn-primary mt-4"

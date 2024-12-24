@@ -120,7 +120,7 @@ mobile_section :["emi_collection_approve","loan_emi_collection","loan_non_emi","
 
                     {Object.entries(listx).map(([keyx, valuex]) => <li key={keyx}>
 
-                            <div className="d-flex  justify-content-between " style={{backgroundColor: "#f2691e",}}
+                            <div className="d-flex  justify-content-between   btn-outline-secondary" style={{backgroundColor: "#f2691e",}}
                                  onClick={(p) => {
 
                                      const tp = pathx;
