@@ -1,33 +1,64 @@
-import twilio from 'twilio';
-import crypto from 'crypto';
-
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
-
-const client = twilio(accountSid, authToken);
-let otpStore = {}; // Store OTPs in memory (for demonstration purposes)
+import axios from "axios";
+import userDB from "@/models/userDB";
+import dbConnect from "@/lib/dbConnect";
 
 export default async function handler(req, res) {
-    if (req.method === 'POST') {
-        const { phoneNumber } = req.body;
+await  dbConnect();
+const Unstop=(len)=>{
+        const characters = '1234567890';
+        let userCode = '';
 
-        // Generate a 6-digit OTP
-        const otp = crypto.randomInt(100000, 999999).toString();
-        otpStore[phoneNumber] = otp; // Store OTP in memory
-
-        try {
-            await client.messages.create({
-                body: `Your OTP is: ${otp}`,
-                to: phoneNumber,
-                from: twilioPhoneNumber,
-            });
-
-            return res.status(200).json({ message: 'OTP sent successfully' });
-        } catch (error) {
-            return res.status(500).json({ error: 'Failed to send OTP' });
+        for (let i = 0; i < len; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            userCode += characters[randomIndex];
         }
+        return userCode;
+
+    }
+const yp= Unstop(4);
+
+ await userDB.updateOne({phone:req.query.phone},{"otp":yp},{upsert:true});
+
+    const options = {
+        method: 'POST',
+        url: 'https://control.msg91.com/api/v5/flow',
+        headers: {
+            authkey: '434134Ath9vC3D5a674188ebP1',
+            accept: 'application/json',
+            'content-type': 'application/json'
+        },
+
+
+        data: `{
+  "template_id": "674175dbd6fc0524f2303bd2",
+  "short_url": "0",
+  "realTimeResponse": "1", 
+  "recipients": [
+    {
+      "mobiles": "91${req.query.phone}",
+      "var1": "${yp}"
+    }
+  ]
+}`
+
+    };
+
+
+
+    try {
+
+        const { data } = await axios.request(options);
+        console.log(data);
+
+
+        res.status(200).send({})
+
+    } catch (error) {
+
+        console.error(error);
+
     }
 
-    return res.status(405).json({ error: 'Method not allowed' });
+    res.status(200).send({})
+
 }

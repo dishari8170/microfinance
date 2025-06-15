@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import Branch_masterDB from "@/models/Branch_masterDB"
+import Branch_masterDB from "@/models/branchDB"
 export default async (req, res) => {
 
     await dbConnect()
