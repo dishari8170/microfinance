@@ -120,6 +120,9 @@ const [readOnly, setReadOnly] = useState(false);
         phone: '',
         dateOfBirth: '',
         email: '',
+        naddress:"",
+        nrelation:"",
+
 
         presentAddress: {
             village: '',
@@ -141,6 +144,12 @@ const [readOnly, setReadOnly] = useState(false);
         },
         identityProof: '',
         identityProofNumber: '',
+        nname:"",
+        relation:"",
+        nidentityProof: '',
+        nidentity_font:"dp.png",
+        nidentity_back:"dp.png",
+        nidentityProofNumber: '',
         addressProof: '',
         addressProofNumber: '',
         address_back: "dp.png",
@@ -207,19 +216,22 @@ const [readOnly, setReadOnly] = useState(false);
 
                             <div className="col-md-3 mb-2">
                                 <div>{values.role} ID</div>
-                                <Field  className="form-control mt-2" name="code" disabled/>
+
+
+                                <Field className="form-control mt-2" name="code"  />
 
                             </div>
                             <div className="col-md-3 mb-2">
-                                <div>{values.role.toLowerCase().includes("employee")?"Branch Code":"Supervisor Code"}</div>
-                                <Field disabled={readOnly} className="form-control mt-2" name="parent" />
+                                <div>{values.role.toLowerCase().includes("employee") ? "Branch Code" : "Supervisor Code"}</div>
+                                <Field disabled={readOnly} className="form-control mt-2" name="parent"/>
                                 <ErrorMessage name="parent" component="div" className="text-danger mt-2"/>
                             </div>
 
 
                             <div className="col-md-3 mb-2">
                                 <div>Name</div>
-                                <Field disabled={readOnly} className="form-control mt-2" name="name" placeholder="Enter your name"/>
+                                <Field disabled={readOnly} className="form-control mt-2" name="name"
+                                       placeholder="Enter your name"/>
                                 <ErrorMessage name="name" component="div" className="text-danger mt-2"/>
                             </div>
 
@@ -245,19 +257,22 @@ const [readOnly, setReadOnly] = useState(false);
 
                             <div className="col-md-3 mb-2">
                                 <div>Mobile No</div>
-                                <Field disabled={readOnly} className="form-control mt-2" name="phone" placeholder="Enter mobile number"/>
+                                <Field disabled={readOnly} className="form-control mt-2" name="phone"
+                                       placeholder="Enter mobile number"/>
                                 <ErrorMessage name="phone" component="div" className="text-danger mt-2"/>
                             </div>
 
                             <div className="col-md-3 mb-2">
                                 <div>Date of Birth</div>
-                                <Field disabled={readOnly} type="date" className="form-control mt-2" name="dateOfBirth"/>
+                                <Field disabled={readOnly} type="date" className="form-control mt-2"
+                                       name="dateOfBirth"/>
                                 <ErrorMessage name="dateOfBirth" component="div" className="text-danger mt-2"/>
                             </div>
 
                             <div className="col-md-3 mb-2">
                                 <div>Email</div>
-                                <Field disabled={readOnly} className="form-control mt-2" name="email" placeholder="Enter email"/>
+                                <Field disabled={readOnly} className="form-control mt-2" name="email"
+                                       placeholder="Enter email"/>
                                 <ErrorMessage name="email" component="div" className="text-danger mt-2"/>
                             </div>
 
@@ -317,8 +332,12 @@ const [readOnly, setReadOnly] = useState(false);
 
                             <div className="col-12 d-inline-flex justify-content-between">
                                 <h3>Permanent Address </h3>
-                                {readOnly?<div></div>:<div className=""> <input type="checkbox" name="" className="form-check-input border-danger ms-2  mt-2"
-                                       style={{height: "30px", width: "30px",}}  onChange={async u => {
+                                {readOnly ? <div></div> : <div className=""><input type="checkbox" name=""
+                                                                                   className="form-check-input border-danger ms-2  mt-2"
+                                                                                   style={{
+                                                                                       height: "30px",
+                                                                                       width: "30px",
+                                                                                   }} onChange={async u => {
 
 
                                     if (u.target.checked) {
@@ -343,7 +362,9 @@ const [readOnly, setReadOnly] = useState(false);
 
 
                                     }
-                                }}/><div className="">Same..?</div> </div>}
+                                }}/>
+                                    <div className="">Same..?</div>
+                                </div>}
 
                             </div>
 
@@ -404,10 +425,47 @@ const [readOnly, setReadOnly] = useState(false);
                             </div>
 
 
+                            <div className="col-12 py-3"><h3>Nominee</h3></div>
+
+                            <div className="col-md-3 mb-2">
+                                <div>Name</div>
+                                <Field disabled={readOnly} className="form-control mt-2" name="nname"
+                                       placeholder="Enter Name"/>
+                                <ErrorMessage name="name" component="div"
+                                              className="text-danger mt-2"/>
+                            </div>
+
+                            <div className="col-md-3 mb-2">
+                                <div>Relation</div>
+                                <Field disabled={readOnly} as="select" name="nrelation"
+                                       className="form-control mt-2">
+                                    <option value="">Select Relation </option>
+                                    <option value="Mother">Mother</option>
+                                    <option value="Father">Father</option>
+                                    <option value="Son">Son</option>
+                                    <option value="Daughter">Daughter</option>
+                                    <option value="Husband">husband</option>
+                                    <option value="Wife">Wife</option>
+                                    <option value="Other">Other</option>
+                                </Field>
+                                <ErrorMessage name="nrelation" component="div"
+                                              className="text-danger mt-2"/>
+                            </div>
+
+                            <div className="col-md-6 mb-2">
+                                <div> Address</div>
+                                <Field disabled={readOnly} className="form-control mt-2" name="naddress"
+                                       placeholder="Address"/>
+                                <ErrorMessage name="naddress" component="div"
+                                              className="text-danger mt-2"/>
+                            </div>
+
+
                             <div className="col-12 py-3"><h3>Documents</h3></div>
                             <div className="col-md-3 mb-2">
                                 <div>Identity Proof</div>
-                                <Field disabled={readOnly} as="select" name="identityProof" className="form-control mt-2">
+                                <Field disabled={readOnly} as="select" name="identityProof"
+                                       className="form-control mt-2">
                                     <option value="">Select Identity Proof</option>
                                     <option value="Aadhar Card">Aadhar Card</option>
                                     <option value="PAN">PAN</option>
@@ -425,7 +483,8 @@ const [readOnly, setReadOnly] = useState(false);
                             </div>
                             <div className="col-md-3 mb-2">
                                 <div>Address Proof</div>
-                                <Field disabled={readOnly} as="select" name="addressProof" className="form-control mt-2">
+                                <Field disabled={readOnly} as="select" name="addressProof"
+                                       className="form-control mt-2">
                                     <option value="">Select Address Proof</option>
                                     <option value="Voter Card">Voter Card</option>
                                     <option value="Aadhar Card">Aadhar Card</option>
@@ -443,72 +502,121 @@ const [readOnly, setReadOnly] = useState(false);
                                 <ErrorMessage name="addressProofNumber" component="div" className="text-danger mt-2"/>
                             </div>
 
-                            
+
+                            <div className="col-md-3 mb-2">
+                                <div>Nominee Identity Proof</div>
+                                <Field disabled={readOnly} as="select" name="nidentityProof"
+                                       className="form-control mt-2">
+                                    <option value="">Select Identity Proof</option>
+                                    <option value="Aadhar Card">Aadhar Card</option>
+                                    <option value="Voter Card">Voter Card</option>
+                                </Field>
+                                <ErrorMessage name="identityProof" component="div" className="text-danger mt-2"/>
+
+                            </div>
+
+                            <div className="col-md-3 mb-2">
+                                <div>Nominee Identity Proof Number</div>
+                                <Field disabled={readOnly} className="form-control mt-2" name="nidentityProofNumber"
+                                       placeholder="Enter Identity Proof Number"/>
+                                <ErrorMessage name="identityProofNumber" component="div" className="text-danger mt-2"/>
+                            </div>
+
+
                             <div className="row mt-2">
                                 <div className="col-md-6  col-lg-4">Identity Proof Font Page
-                                    {readOnly?<a href={dh.ImUrl+values.identity_font}>
-                                            <div className="d-flex justify-content-center bg-primary p-3 mt-2">
-                                                <img className="w-100" src={dh.ImUrl+values.identity_font}
-                                                     style={{objectFit: "scale-down"}} height={"200px"}
-                                                     alt={dh.ImUrl+values.identity_font}/></div></a>:<UploadX
-                                                cb={(im) => setValues({...values, identity_font: im})}
-                                                df={values.identity_font}
-                                                height={"200px"}
-                                                className="bg-primary mt-3"/>}
-
-
-                                            </div>
-                                            <div className="col-md-6 col-lg-4"> Identity Proof Back Page
-                                                {readOnly?<a href={dh.ImUrl+values.identity_back}>
-                                                        <div className="d-flex justify-content-center bg-primary p-3 mt-2">
-                                                            <img className="w-100" src={dh.ImUrl+values.identity_back}
-                                                                 style={{objectFit: "scale-down"}} height={"200px"}
-                                                                 alt={dh.ImUrl+values.identity_back}/></div></a>:<UploadX
-                                                            cb={(im) => setValues({...values, identity_back: im})}
-                                                            df={values.identity_back}
-                                                            height={"200px"}
-                                                            className="bg-primary mt-3 "/>}</div>
-                                                        <div className="col-md-6 col-lg-4">Address Proof Font
-                                                            {readOnly?<a href={dh.ImUrl+values.address_font}>
-                                                                    <div className="d-flex justify-content-center bg-primary p-3 mt-2">
-                                                                        <img className="w-100" src={dh.ImUrl+values.address_font}
-                                                                             style={{objectFit: "scale-down"}} height={"200px"}
-                                                                             alt={dh.ImUrl+values.address_font}/></div></a>:<UploadX
-                                                                cb={(im) => setValues({...values, address_font: im})}
-                                                                df={values.address_font}
-                                                                height={"200px"}
-                                                                className="bg-primary mt-3"/>}</div>
-                                                        <div className="d-lg-block col-12   d-none" style={{minHeight: "25px"}}></div>
-                                <div className="col-md-6 col-lg-4"> Address Proof Back
-                                    {readOnly?<a href={dh.ImUrl+values.address_back}>
+                                    {readOnly ? <a href={dh.ImUrl + values.identity_font}>
                                         <div className="d-flex justify-content-center bg-primary p-3 mt-2">
-                                            <img className="w-100" src={dh.ImUrl+values.address_back}
+                                            <img className="w-100" src={dh.ImUrl + values.identity_font}
                                                  style={{objectFit: "scale-down"}} height={"200px"}
-                                                 alt={dh.ImUrl+values.address_back}/>
+                                                 alt={dh.ImUrl + values.identity_font}/></div>
+                                    </a> : <UploadX
+                                        cb={(im) => setValues({...values, identity_font: im})}
+                                        df={values.identity_font}
+                                        height={"200px"}
+                                        className="bg-primary mt-3"/>}
+
+
+                                </div>
+                                <div className="col-md-6 col-lg-4"> Identity Proof Back Page
+                                    {readOnly ? <a href={dh.ImUrl + values.identity_back}>
+                                        <div className="d-flex justify-content-center bg-primary p-3 mt-2">
+                                            <img className="w-100" src={dh.ImUrl + values.identity_back}
+                                                 style={{objectFit: "scale-down"}} height={"200px"}
+                                                 alt={dh.ImUrl + values.identity_back}/></div>
+                                    </a> : <UploadX
+                                        cb={(im) => setValues({...values, identity_back: im})}
+                                        df={values.identity_back}
+                                        height={"200px"}
+                                        className="bg-primary mt-3 "/>}</div>
+                                <div className="col-md-6 col-lg-4">Address Proof Font
+                                    {readOnly ? <a href={dh.ImUrl + values.address_font}>
+                                        <div className="d-flex justify-content-center bg-primary p-3 mt-2">
+                                            <img className="w-100" src={dh.ImUrl + values.address_font}
+                                                 style={{objectFit: "scale-down"}} height={"200px"}
+                                                 alt={dh.ImUrl + values.address_font}/></div>
+                                    </a> : <UploadX
+                                        cb={(im) => setValues({...values, address_font: im})}
+                                        df={values.address_font}
+                                        height={"200px"}
+                                        className="bg-primary mt-3"/>}</div>
+                                <div className="d-lg-block col-12   d-none" style={{minHeight: "25px"}}></div>
+                                <div className="col-md-6 col-lg-4"> Address Proof Back
+                                    {readOnly ? <a href={dh.ImUrl + values.address_back}>
+                                        <div className="d-flex justify-content-center bg-primary p-3 mt-2">
+                                            <img className="w-100" src={dh.ImUrl + values.address_back}
+                                                 style={{objectFit: "scale-down"}} height={"200px"}
+                                                 alt={dh.ImUrl + values.address_back}/>
 
                                         </div>
-                                    </a>:<UploadX cb={(im) => setValues({...values, address_back: im})}
-                                                 df={values.address_back}
-                                                 height={"200px"}
-                                                 className="bg-primary mt-3 "/>}
+                                    </a> : <UploadX cb={(im) => setValues({...values, address_back: im})}
+                                                    df={values.address_back}
+                                                    height={"200px"}
+                                                    className="bg-primary mt-3 "/>}
 
                                 </div>
                                 <div className="col-md-6 col-lg-4">Profile Photo
-                                    {readOnly?<a href={dh.ImUrl+values.photo}>
-                                            <div className="d-flex justify-content-center bg-primary p-3 mt-2">
-                                                <img className="w-100" src={dh.ImUrl+values.photo}
-                                                     style={{objectFit: "scale-down"}} height={"200px"}
-                                                     alt={dh.ImUrl+values.photo}/></div></a>:<UploadX cb={(im) => setValues({...values, photo: im})} df={values.photo}
-                                              height={"200px"}
-                                              className="bg-primary mt-3"/>}</div>
+                                    {readOnly ? <a href={dh.ImUrl + values.photo}>
+                                        <div className="d-flex justify-content-center bg-primary p-3 mt-2">
+                                            <img className="w-100" src={dh.ImUrl + values.photo}
+                                                 style={{objectFit: "scale-down"}} height={"200px"}
+                                                 alt={dh.ImUrl + values.photo}/></div>
+                                    </a> : <UploadX cb={(im) => setValues({...values, photo: im})} df={values.photo}
+                                                    height={"200px"}
+                                                    className="bg-primary mt-3"/>}</div>
                                 <div className="col-md-6 col-lg-4"> Signature
-                                    {readOnly?<a href={dh.ImUrl+values.signature}>
-                                            <div className="d-flex justify-content-center bg-primary p-3 mt-2">
-                                                <img className="w-100" src={dh.ImUrl+values.signature}
-                                                     style={{objectFit: "scale-down"}} height={"200px"}
-                                                     alt={dh.ImUrl+values.signature}/></div></a>:<UploadX cb={(im) => setValues({...values, signature: im})} df={values.signature}
-                                              height={"200px"}
-                                              className="bg-primary  mt-3"/>}</div>
+                                    {readOnly ? <a href={dh.ImUrl + values.signature}>
+                                        <div className="d-flex justify-content-center bg-primary p-3 mt-2">
+                                            <img className="w-100" src={dh.ImUrl + values.signature}
+                                                 style={{objectFit: "scale-down"}} height={"200px"}
+                                                 alt={dh.ImUrl + values.signature}/></div>
+                                    </a> : <UploadX cb={(im) => setValues({...values, signature: im})}
+                                                    df={values.signature}
+                                                    height={"200px"}
+                                                    className="bg-primary  mt-3"/>}</div>
+
+
+                                <div className="col-md-6 col-lg-4 mt-4"> Nominee Identity font
+                                    {readOnly ? <a href={dh.ImUrl + values.nidentity_font}>
+                                        <div className="d-flex justify-content-center bg-primary p-3 mt-2">
+                                            <img className="w-100" src={dh.ImUrl + values.nidentity_font}
+                                                 style={{objectFit: "scale-down"}} height={"200px"}
+                                                 alt={dh.ImUrl + values.nidentity_font}/></div>
+                                    </a> : <UploadX cb={(im) => setValues({...values, nidentity_font: im})}
+                                                    df={values.nidentity_font}
+                                                    height={"200px"}
+                                                    className="bg-primary  mt-3"/>}</div>
+                                
+                                <div className="col-md-6 col-lg-4 mt-4"> Nominee Identity Back
+                                    {readOnly ? <a href={dh.ImUrl + values.nidentity_back}>
+                                        <div className="d-flex justify-content-center bg-primary p-3 mt-2">
+                                            <img className="w-100" src={dh.ImUrl + values.nidentity_back}
+                                                 style={{objectFit: "scale-down"}} height={"200px"}
+                                                 alt={dh.ImUrl + values.nidentity_back}/></div>
+                                    </a> : <UploadX cb={(im) => setValues({...values, nidentity_back: im})}
+                                                    df={values.nidentity_back}
+                                                    height={"200px"}
+                                                    className="bg-primary  mt-3"/>}</div>
 
                             </div>
 
@@ -520,15 +628,15 @@ const [readOnly, setReadOnly] = useState(false);
 
 
                                 {readOnly ? "" : <input className="btn px-5 btn-success" type="submit" value="submit"/>}
-                                {readOnly?<button className="btn px-5 ms-2 btn-warning text-white" type="button"
-                                         onClick={(l)=>{
+                                {readOnly ? <button className="btn px-5 ms-2 btn-warning text-white" type="button"
+                                                    onClick={(l) => {
 
-                                             router.back()
-                                         }}>Back
-                                </button>:
-                                <button className="btn px-5 ms-2 btn-warning text-white" type="button"
-                                        onClick={resetForm}>Clear
-                                </button>}
+                                                        router.back()
+                                                    }}>Back
+                                    </button> :
+                                    <button className="btn px-5 ms-2 btn-warning text-white" type="button"
+                                            onClick={resetForm}>Clear
+                                    </button>}
                             </div>
 
                         </div>

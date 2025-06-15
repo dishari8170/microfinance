@@ -2,14 +2,15 @@ import { NextResponse } from 'next/server';
 import {jwtVerify} from "jose";
 
 
-export async function middleware(req) {
+export async function middlewarex(req) {
     let res = null;
 
     const {pathname} = req.nextUrl;
+    console.log("=====>",pathname)
 
     // return NextResponse.next();
 
-    if (pathname.startsWith("/employee")) {
+    if (pathname.startsWith("/api/")) {
 
 
         const token = req.cookies.get("token")?.value;
@@ -25,9 +26,14 @@ export async function middleware(req) {
             const  tok= await jwtVerify(token,new TextEncoder().encode("raju"));
 
 
-            if (tok.payload.role === "admin"|| tok.payload.role === "employee"||tok.payload.role === "Agent") {
+            if (tok.payload.role.toLowerCase() === "admin"|| tok.payload.role === "employee"||tok.payload.role === "Agent") {
 
-                req.headers.lol = JSON.stringify(tok.payload)
+                req.headers.set('lol', JSON.stringify(tok.payload));
+
+                console.log("===XXXrr==>",tok.payload)
+
+
+
 
 
             }else {
@@ -35,15 +41,12 @@ export async function middleware(req) {
               //  return NextResponse.redirect(new URL('/', req.url));
             }
 
-            console.log("=====>",tok.payload)
-
-
 
 
 
         }catch (e){
 
-
+            console.log("=====>",e)
         }
 
     }
@@ -78,6 +81,6 @@ export async function middleware(req) {
 
 
 export const config = {
-    matcher: '/:path*', // Apply middleware to API routes only
+    matcher: '/api/:path*', // Apply middleware to API routes only
 };
 

@@ -7,6 +7,7 @@ const homeschema = new mongoose.Schema({
     code:String,
     name:String,
     member:String,
+    phone:String,
     employee:String,
     amount:Number,
     date:Date,
@@ -15,10 +16,7 @@ const homeschema = new mongoose.Schema({
         default:0
     },
     total:Number,
-    interest:{
-        type:Number,
-        default:0
-    },
+  days:{default:0,type:Number},
     isNormal: {type: Boolean, default: true},
     isActive : {type: Boolean, default: true},
 },{timestamps:true});

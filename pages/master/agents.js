@@ -141,14 +141,19 @@ export default function AgentsEmp() {
 
 
                                 }}><FaTrash/></div>
-                                <a href={`/master/user?role=Agent&view=true&_id=${data._id}`}>
+                                <a href={`/master/user?role=Agent&view=true&code=${data.code}`}>
                                     <div className="btn btn-success mx-2"><FaEye/></div>
                                 </a>
-                                <a href={`/master/user?role=Agent&_id=${data._id}`}>
+
+
+
+                                <a href={`/master/user?role=Agent&code=${data.code}&editx=true`}>
                                     <div className="btn btn-primary mx-2"><FaPenAlt/>
                                     </div>
 
                                 </a>
+
+
                                 <a href={`/api/Agent_arg?code=${data.code}`}>
                                     <div className="btn btn-primary mx-2"><FaDownload/>
                                     </div>
@@ -163,7 +168,8 @@ export default function AgentsEmp() {
 
                     </tbody>
                 </table>
-            </div></div>
+            </div>
+        </div>
         <div className="d-flex justify-content-center align-middle mt-4">
             <ul className="pagination">
 
@@ -173,7 +179,7 @@ export default function AgentsEmp() {
 
                             const up = document.getElementById("loadingx")
                             up.style.display = "flex";
-                            // loaddataU(index * 10);
+                            loaddataU(index * 10);
 
 
                         }}>{index * 10}</div>

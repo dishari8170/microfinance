@@ -59,10 +59,91 @@
         return <SideEmp>
 
 
+            <div className="card p-3 mb-3">
+                <div className="p-4 mb-3 rounded text-white card" style={{backgroundColor: "#1a75a9"}}>
+                    <div className="h3">Add New Transactions</div>
+                </div>
+                <Formik initialValues={{
+                    code:"",
+                    amount: "",
+                    remark:"",
+                    type:1,
+                    date: Date.now().toString(),
+
+
+
+                }} onSubmit={(values) => {
+
+                    Swal.fire({
+                        title: "Are You Sure",
+
+                        showCancelButton: true,
+                        confirmButtonText: "Confirm",
+                        showLoaderOnConfirm: true,
+                        preConfirm: async (login) => {
+
+                            await axios.post("/api/transaction", values)
+
+                        }
+
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: "Done",
+                                html: "Account Created Successfully",
+                                icon: "success",
+                            }).then(rr => {
+
+                                window.location.reload();
+
+                            })
+                        }
+
+                    })
+
+                }}>
+                    {({resetForm, values, setValues, errors, submitForm}) => <Form>
+
+
+
+                       <div className="mb-2    ">Transaction Type</div>
+
+                        <Field name="type" className={"form-control mb-2"} as="select">
+
+                            <option value="1" className="form-control">Saving Deposit</option>
+                            <option value="2" className="form-control">Close Saving Account</option>
+                            <option value="3" className="form-control">Saving Deposit</option>
+
+
+                        </Field>
+
+
+                        <div className="">Account Id</div>
+                        <Field name="code" className={"mb-2 form-control"}/>
+                        <div className="">Date</div>
+                        <Field name="date" type={"datetime-local"} className={"mb-2 form-control"}/>
+                        <div className="">Amount</div>
+                        <Field name="amount" className={"mb-2 form-control"}/>
+
+                        <div className="">Remark</div>
+                        <Field name="remark" className={"mb-2 form-control"}/>
+
+
+
+
+                        <div className="btn btn-primary" onClick={submitForm}>Add Transactions</div>
+
+
+                    </Form>}
+
+
+                </Formik>
+
+            </div>
 
             <div className="bg-white shadow-sm card">
                 <div className="px-4 py-3">
-                    <div className="row py-4 rounded " style={{backgroundColor:"#1a75a9"}}>
+                    <div className="row py-4 rounded " style={{backgroundColor: "#1a75a9"}}>
                         <div className="col-md-3">
                             <input className="form-control" placeholder="Text To Search" onChange={i => {
 
@@ -95,7 +176,8 @@
                         </div>
                         <div className="col-md-3 col-6 ">
 
-                            <div className="d-none d-lg-flex  float-end h2 text-white "><FaStar className="me-2"/>Transactions</div>
+                            <div className="d-none d-lg-flex  float-end h2 text-white "><FaStar className="me-2"/>Transactions
+                            </div>
 
 
                         </div>
@@ -112,9 +194,10 @@
                             <th scope="col">Tnx No.</th>
                             <th scope="col">Information</th>
                             <th scope="col">Emp</th>
-                            <th scope="col">Member</th>
-                            <th scope="col">Amount</th>
+                            <th scope="col">Account</th>
+
                             <th scope="col">Time</th>
+                            <th scope="col">Amount</th>
 
 
                         </tr>
@@ -130,16 +213,16 @@
                             <td className="fw-bold">{data.remark}
                             </td>
 
-                            <td><a href={"/master/user?role=Employee&code="+data.by}> {data.by}</a></td>
+                            <td><a href={"/master/user?role=Employee&code=" + data.by}> {data.by}</a></td>
                             <td>
                                 {data.to}
                                 {/*<a href={"/master/user?role=Agent&code="+data.agent}>{data.agent}</a>*/}
 
                             </td>
 
-                            <td>{new Date(data.createdAt).toLocaleString()  }</td>
+                            <td>{new Date(data.createdAt).toLocaleString()}</td>
 
-                            <td className={data.iscr?"fw-bold text-success":"fw-bold text-danger"}>₹ {data.amount}
+                            <td className={data.iscr ? "fw-bold text-success" : "fw-bold text-danger"}>₹ {data.amount}
                             </td>
 
                         </tr>)}
@@ -172,4 +255,4 @@
             </div>
         </SideEmp>
 
-}
+    }

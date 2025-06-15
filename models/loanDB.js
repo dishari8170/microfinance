@@ -1,22 +1,51 @@
 import mongoose from "mongoose";
 
 
-
 const homeschema = new mongoose.Schema({
-    parent :String,
-    code:String,
-    type:String,
-    customer:String,
-    term:Number,
-    rate:Number,
-    ltype:Boolean,
-    amount:Number,
-    tenure:Number,
-    doc:{ type: Map,
-        of: String,  },
-});
 
+        code: String,
+        type: String,
+        member: String,
+        name: String,
+        phone: String,
+        employee: String,
+        status: Number,
+        agent: String,
+        branch: String,
 
+        date: {
+            type: Date,
+            default: Date.now,
+
+        },
+        term: {
+            days: {
+                type: Number,
+                default: 360
+            },
+            rate: {
+                type: Number,
+                default: 32
+            }
+
+        },
+        amount: Number,
+        bank: {
+            name: String,
+            ac: String,
+            ifsc: String,
+            ben: String
+        },
+        doc: {
+            type: Map,
+            of: String,
+            default: {},
+
+        },
+    }, {
+        timestamps: true
+    }
+);
 
 
 module.exports = mongoose.models.loanDB || mongoose.model("loanDB", homeschema);

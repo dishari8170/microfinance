@@ -4,6 +4,7 @@ import savingDB from "@/models/savingDB";
 import branchDB from "@/models/branchDB";
 import transactionDB from "@/models/transactionDB";
 import dbConnect from "@/lib/dbConnect";
+import axios from "axios";
 
 export default async function handler(req, res) {
 
@@ -33,37 +34,13 @@ export default async function handler(req, res) {
 
 
         }
-
         console.log("=======>", g);
 
 
         return branch.toString() + ("0".repeat((10 - (branch.toString().length + g.toString().length))) + g)
 
-        // await configDB.updateOne({branch: branch},{$inc:{"saving":1}});
 
 
-        // const characters = '1234567890QWERTYUIOPASDFGHJKLZXCVBNM';
-        // let userCode = '';
-        //
-        // for (let i = 0; i < len; i++) {
-        //     const randomIndex = Math.floor(Math.random() * characters.length);
-        //     userCode += characters[randomIndex];
-        // }
-        //
-        // const mi = await c.findOne({code: userCode})
-        // if (mi) {
-        //
-        //     console.log("aaaaaaaaaaaaaaaa")
-        //     return generateUserCode()
-        //
-        // }
-        // else {
-        //
-        //     console.log(`bbbbbbbbbb${userCode}`)
-        //
-        //     return userCode
-        //
-        // }
 
 
     }
@@ -72,38 +49,191 @@ export default async function handler(req, res) {
     if (req.cookies["token"]) {
 
 
-        // const  a= await savingDB.updateOne({}, { date: { $dateAdd: { startDate: "$date", unit: "month", amount: 1 }}});
-
-
         const tok = (await jwtVerify(req.cookies["token"], new TextEncoder().encode("raju"))).payload;
+
+
+
+        if (req.query.close) {
+
+
+         const rdata=   await  transactionDB.aggregate([
+             {
+                 $match: { to: req.query.close,type:1 } // Filter documents where `name` is "Alice"
+             },
+                 {
+                     $addFields: {
+
+                         years: {
+                             $divide: [
+                                 { $subtract: [new Date(), "$createdAt"] },
+                                 1000 * 60 * 60 * 24 * 365 // Convert milliseconds to years
+                             ]
+                         }
+                     }
+                 },
+                 {
+                     $addFields: {
+                         // Calculate the simple interest
+                         simple_interest: {
+                             $multiply: [
+                                 "$amount",
+                                 Number.parseInt(req.query.rate), // Annual interest rate
+                                 "$years"
+                             ]
+                         }
+                     }
+                 },
+                 {
+                     $addFields: {
+                         simple_interest: { $divide: ["$simple_interest", 100] } // Divide by 100 to get the final SI
+                     }
+                 }
+
+                 ]
+
+
+        );
+
+
+
+        return res.status(200).json(rdata);
+
+        }
+
+
 
         if (req.query.pay) {
 
 
+
+
             await transactionDB.create({
-                code: await generateUserCodeConfig(tok.parent, 2),
+                code: await generateUserCodeConfig(m .parent, 2),
+
+                type: 1,
                 by: tok.code,
+                member:req.query.mem,
                 to: req.query.code,
+                agent: req.query.agent,
+                amount: req.query.pay ,
                 remark: "Saving Payment received",
-                amount: req.query.pay
-            });
+                iscr: true,
+
+
+
+            })
+
+
+
+
+
+
+
+
+            const options = {
+                method: 'POST',
+                url: 'https://control.msg91.com/api/v5/flow',
+                headers: {
+                    authkey: '434134Ath9vC3D5a674188ebP1',
+                    accept: 'application/json',
+                    'content-type': 'application/json'
+                },
+
+
+                data: `{
+  "template_id": "67a5b679d6fc05769b16b9c2",
+  "short_url": "0",
+  "realTimeResponse": "1", 
+  "recipients": [
+    {
+      "mobiles": "91${req.query.phone}",
+      "var1": "${req.query.pay}",
+      "var2": "${req.query.code.toString().substring(4)}",
+      "var3": "${( new Date()).toDateString()}"
+    }
+  ]
+}`
+
+            };
+
+
+
+            try {
+
+                const { data } = await axios.request(options);
+
+                console.log(data)
+
+                // return   res.status(200).json(data)
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+            // await transactionDB.create({
+            //     code: await generateUserCodeConfig(tok.parent, 2),
+            //     by: tok.code,
+            //     type: 1,
+            //     to: req.query.code,
+            //     remark: "Saving Payment received",
+            //     amount: req.query.pay
+            // });
+            //
+
             if (req.query.due) {
+
+                // await transactionDB.create({
+                //     code: await generateUserCodeConfig(tok.parent, 2),
+                //     by: tok.code,
+                //     to: req.query.code,
+                //     remark: "Saving Penalty",
+                //     amount: req.query.due
+                // });
+
+
 
                 await transactionDB.create({
                     code: await generateUserCodeConfig(tok.parent, 2),
+
+                    type: 2,
                     by: tok.code,
+                    member:req.query.mem,
                     to: req.query.code,
+                    agent: req.query.agent ,
+                    amount: req.query.due,
                     remark: "Saving Penalty",
-                    amount: req.query.due
-                });
+                    iscr: true,
+
+
+
+                })
+
+
+
             }
 
             // let y= await   savingDB.updateOne({code: req.query.code},{ $set:{isNormal: !JSON.parse( req.query.isNormal) ,date:{ $dateAdd:{ startDate:"$date",unit:"month",amount:1}}}})
 
 
             let c = null;
-            if (req.query.isNormal === 2 || req.query.permanet) {
 
+            if (req.query.isNormal === "2"  ) {
+
+                const todayx = new Date();
+                todayx.setMonth(todayx.getMonth() +1);
 
                 c = await savingDB.updateOne(
                     {code: req.query.code},
@@ -111,16 +241,10 @@ export default async function handler(req, res) {
                         {
 
                             $set: {
-
                                 isNormal: false,
-                                date: {
-                                    $dateAdd: {
-                                        startDate: "$date", // The field containing the original date
-                                        unit: "month", // Add months
-                                        amount: 1, // Increment by 1 month
-                                    },
-                                },
+                                date: todayx
                             },
+
                         },
 
                         {
@@ -168,6 +292,26 @@ export default async function handler(req, res) {
 
 
         if (req.query.rajuxy){
+
+
+
+            await transactionDB.create({
+
+                code: await generateUserCodeConfig(tok.parent, 2),
+                type: 3,
+                by: tok.code,
+                member:req.query.mem,
+                to: req.query.rajuxy,
+                agent:req.query.agent,
+                amount: req.query.pay,
+                remark: "Saving Account Close",
+                iscr: false,
+
+
+
+            })
+
+
             const rt= await savingDB.updateOne({code: req.query.rajuxy},{$set:{isActive:false}});
             return res.status(200).json(rt)
 
@@ -179,6 +323,7 @@ export default async function handler(req, res) {
             let y = await savingDB.deleteOne({code: req.query.code})
 
             return res.status(200).json(y);
+
         }
 
 
@@ -255,11 +400,14 @@ export default async function handler(req, res) {
 
             const user = await userDB.findOne({code: req.body.member});
 
+
             const saving = await savingDB.create({
 
+                phone:user.phone,
                 name: user.name,
                 member: user.code,
                 agent: user.parent,
+                days:req.body.days,
                 employee: tok.code,
                 createdAt: req.body.date?new Date(req.body.date):Date.now(),
                 amount: req.body.amount,

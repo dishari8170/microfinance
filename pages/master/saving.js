@@ -1,9 +1,10 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {dh} from "@/lib/Dh";
 import {useRouter} from "next/router";
 import Swal from "sweetalert2";
 import {
+    FaCheck,
     FaCheckCircle,
     FaCross,
     FaDownload,
@@ -18,24 +19,91 @@ import {
 import SideEmp from "@/Comp/SideMas";
 
 import {Field, Form, Formik} from "formik";
+import {Modal} from "react-bootstrap";
 
 
 export default function SavingsEmp() {
 
-    const today= new Date();
+    const today = new Date();
+    const otoday = new Date();
     //
-    const [ResponceData, setResponceData] = useState([]);
+    const [accountClose, setaccountclose] = useState([]);
+    const [selectacc, setselectacc] = useState({});
 
     const [getc, setc] = useState(0);
     const [getudat, setudat] = useState([]);
     const pro = "code,name,parent,phone,photo,email"
 
     const [searchtext, setserchtext] = useState("");
+    const [xdilog, setDilog] = useState(false);
+    const [xdilogamt, clloseamt] = useState(0);
     const [cat, setcat] = useState("name");
+
+
+    async function closeacc(accid,intres,agent) {
+        await axios.get("/api/saving?close=" + accid+"&rate="+intres+"&agent="+agent).then(value => {
+
+
+            setaccountclose(value.data);
+
+
+        })
+    }
+
+
+
+
+
+
+    const  showdatax=(datap) =>{
+
+        console.log("xxx")
+        const dmt=datap.length;
+        if (dmt===0) return ""
+const amtd=datap[0].amount??0;
+        const  instraess= datap.reduce((accumulator, currentValue) => accumulator + Number.parseFloat(currentValue.simple_interest?.toFixed(2)), 0);
+
+        const totalg=(( amtd*dmt)+instraess).toFixed(2);
+
+        clloseamt(totalg);
+      return  <div className="card mt-5 fw-bold">
+
+            <div className="card-header">Total</div>
+
+            <div className="card-body">
+                Installment Amount = {amtd}
+                <br/>
+
+                Total Installment = {dmt}
+                <br/>
+
+
+
+
+                Total Interest = {instraess}
+
+
+
+            </div>
+          <div className="card-footer">
+
+
+              Final Amount  =  ( Amount x Installment ) + Total Interest
+
+              <br/>
+             == {totalg}
+
+
+          </div>
+
+        </div>
+
+
+    }
 
     function loaddataU(s = "0") {
 
-        axios.get("/api/saving?limit=10&skip=" + s + "&search=" + searchtext + "&on="+cat).then(value => {
+        axios.get("/api/saving?limit=10&skip=" + s + "&search=" + searchtext + "&on=" + cat).then(value => {
 
             setc(value.data.total);
 
@@ -54,25 +122,181 @@ export default function SavingsEmp() {
     }, []);
 
 
-    const [showx,setshowx]=useState(false);
+    const [showx, setshowx] = useState(false);
 
     return <SideEmp>
 
 
+        <Modal backdrop="static" keyboard={false} fullscreen={true} show={xdilog} centered={true} className="">
+            <Modal.Header className="bg-dark text-white" >
+                <Modal.Title>Saving Account Summary</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="bg-dark overflow-y-scroll" style={{color: "white"}}>
 
+
+                    <table className="table  table-striped table-bordered align-items-center table-dark text-center">
+
+                        <thead>
+                        <tr>
+                            <th>
+                                Deposit Date
+
+                            </th>
+                            <th>
+                                Interest time (days)
+
+                            </th>
+                            <th>
+                                Interest
+
+                            </th>
+
+
+
+                        </tr>
+
+                        </thead>
+                        <tbody>
+
+                        {accountClose.map((d) => {
+
+
+
+                            const tg = (otoday - new Date(d.createdAt)) / (1000 * 60 * 60 * 24);
+
+
+                            return <tr className="tr">
+
+                                <td>{new Date(d.createdAt).toLocaleString()}</td>
+
+
+                                <td>{tg.toFixed(2)}</td>
+
+                                <td>{d.simple_interest.toFixed(2)}</td>
+
+                            </tr>
+                        })}
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                <div className="">
+
+                    <div className="card mt-5 fw-bold">
+
+                        <div className="card-header">Total</div>
+
+                        <div className="card-body">
+                            Installment Amount = {accountClose[0]?.amount??0}
+                            <br/>
+
+                            Total Installment = {accountClose.length}
+                            <br/>
+
+
+                            Total Interest = {accountClose.reduce((accumulator, currentValue) => accumulator + Number.parseFloat(currentValue.simple_interest?.toFixed(2)), 0)
+
+                        }
+
+
+                        </div>
+                        <div className="card-footer">
+
+
+                            Final Amount = ( Amount x Installment ) + Total Interest
+
+                            <br/>
+                            {/*== {totalg}*/}
+                            = {((accountClose[0]?.amount??0) *accountClose.length ) +accountClose.reduce((accumulator, currentValue) => accumulator + Number.parseFloat(currentValue.simple_interest?.toFixed(2)), 0) }
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </Modal.Body>
+            <Modal.Footer className="bg-dark text-white ">
+
+                <div className="btn btn-danger" onClick={(i) => {
+
+
+                    const amtx = ((accountClose[0]?.amount ?? 0) * accountClose.length) + accountClose.reduce((accumulator, currentValue) => accumulator + Number.parseFloat(currentValue.simple_interest?.toFixed(2)), 0)
+
+
+                    const fxs=accountClose[0]??{}
+                    setshowx(false);
+
+                    Swal.fire({
+
+
+                        title: "Confirm..?",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonText: `Give ₹ ${amtx.toFixed(2)}`,
+                        showLoaderOnConfirm: true,
+
+                        async preConfirm(value) {
+
+
+
+
+                            await axios.get("/api/saving?rajuxy=" + fxs.to+"&amt="+(amtx.toFixed(2)) +"&agent="+fxs.agent +"&mem="+fxs.member)
+
+                        },
+
+
+                    }).then(u => {
+                        if (u.isConfirmed) {
+
+
+
+                            Swal.fire({
+
+
+                                title: "Account Closed",
+                                icon: "success",
+                              })
+
+
+                            .then(rr => {
+
+                                    window.location.reload();
+
+                                })
+                        }
+                    })
+                }}
+
+                >
+                    Close Account
+                </div>
+                <div className="btn btn-secondary" onClick={(i) => setDilog(false)}>
+                    Dismiss
+                </div>
+
+
+            </Modal.Footer>
+        </Modal>
 
 
         <div className="card p-3 mb-3">
-<div className="p-4 mb-3 rounded text-white card" style={{backgroundColor:"#1a75a9"}}>
-            <div className="h3">Add New Saving Account</div></div>
+            <div className="p-4 mb-3 rounded text-white card" style={{backgroundColor: "#1a75a9"}}>
+                <div className="h3">Add New Saving Account</div>
+            </div>
             <Formik initialValues={{
-                member:"",
-                amount:"",
-                date:Date.now(),
-                t:"ac"
+                member: "",
+                amount: "",
+                days: 180,
+                date: Date.now(),
+                t: "ac"
 
-                
-            }} onSubmit={(values)=>{
+
+            }} onSubmit={(values) => {
 
                 Swal.fire({
                     title: "Are You Sure",
@@ -87,8 +311,8 @@ export default function SavingsEmp() {
                     }
 
                 }).then((result) => {
-                    if (result.isConfirmed){
-                        Swal.fire({title:"Done",html:"Account Created Successfully",icon:"success",}).then(rr=>{
+                    if (result.isConfirmed) {
+                        Swal.fire({title: "Done", html: "Account Created Successfully", icon: "success",}).then(rr=>{
 
                             window.location.reload();
 
@@ -105,7 +329,17 @@ export default function SavingsEmp() {
                     <Field name="member" className={"mb-2 form-control"}/>
                     <div className="">Join Date</div>
                     <Field name="date" type={"date"} className={"mb-2 form-control"}/>
+                    <div className="">Select Term</div>
+                    <Field as="select" name="days"
+                           className="form-control mt-2">
+                        <option value={180}>180 days| 6 Month | irregular  3.5%  regular 5% </option>
+                        <option value={360}>360 days| 12 Month | irregular  4%  regular 6%  </option>
+                        <option value={540}>540 days| 18 Month | irregular  5%  regular 7% </option>
+                        <option value={720}>720 days | 24 Month |  irregular  5%  regular 7.5% </option>
+                        <option value={900}>900 days | 30 Month |  irregular  5%  regular 7.5% </option>
+                        <option value={1080}>1080 days | 36 Month |  irregular  5%  regular 7.5% </option>
 
+                    </Field>
                     <div className="">Amount</div>
                     <Field name="amount" className={"mb-2 form-control"}/>
 
@@ -181,9 +415,12 @@ export default function SavingsEmp() {
                     <thead>
                     <tr>
                         <th scope="col">A/C No.</th>
+
+
                         <th scope="col">Name.</th>
+                        <th scope="col">Term.</th>
                         <th scope="col">Mem.Id.</th>
-                        <th scope="col">Agnt.Id.</th>
+                        <th scope="col">Phone.</th>
                         <th scope="col">Pay.Date</th>
                         <th scope="col">Pay.Amt</th>
                         <th scope="col">Late Fee</th>
@@ -204,15 +441,20 @@ const  datx=new Date(data.date);
 
 const isNormalx= (today-datx)/(1000 * 60 * 60 * 24);
 
-const isNormal= data.isNormal? isNormalx>70?2:isNormalx>30?3:isNormalx>5  ?1:0:2;
+
+                        // const otoday=Date.now();
+const term= ((otoday - (new Date(data.createdAt)))/(1000 * 60 * 60 * 24)).toFixed(2)
 
 
-const  due=   (datx<today) ?  (data.amount *0.05* ((today-datx)/(1000 * 60 * 60 * 24 * 365))).toFixed(2) :0;
+const isNormal= data.isNormal? isNormalx>70?2:isNormalx>35?3:isNormalx>5  ?1:0:2;
+
+
+const  due=  data.isNormal? ((datx<today) ?  (isNormal===1? data.amount *0.05:data.amount *0.1).toFixed(2) :0):0;
 
 
 // const  dy1= isNormal ((due/isNormalx)*30);
 
-                        const  amt=isNormal===3? Number.parseFloat(data.amount) +Number.parseFloat(data.amount) :data.amount;
+const  amt= data.amount;
 
 // const duex= isNormalx===2?0:isNormalx>30 ? (due ).toFixed(2):0;
 
@@ -220,20 +462,28 @@ const  due=   (datx<today) ?  (data.amount *0.05* ((today-datx)/(1000 * 60 * 60 
 
 
                         <td className="fw-bold">{data.code}</td>
+                        {/*<td className="fw-bold">{isNormal}</td>*/}
 
-                        <td className="fw-bold">{data.name} ({(data.isActive?isNormal===0:data.isNormal ) ?
-                            <p className="text-success d-inline">Regular</p> : <p className="text-danger d-inline">Irregular</p>})
+
+                        <td className="fw-bold text-white" style={{backgroundColor:data.isActive? isNormal===2?"red":isNormal===1?"#f2691e":isNormal===0?"indigo":"maroon":"black"}}>{data.name}
+
+
+
+                            {/*((data.isActive?isNormal===0:data.isNormal )*/}
+                            {/*// <p className="text-success d-inline">Regular</p> : <p className="text-danger d-inline">Irregular</p>})*/}
                         </td>
 
+                           <td className="fw-bold" style={{backgroundColor:term>data.days?"green":"red",color:"white"}}> {term +" of "+data.days}</td>
+
                         <td><a href={"/master/user?role=Member&code="+data.member}> {data.member}</a></td>
-                        <td><a href={"/master/user?role=Agent&code="+data.agent}>{data.agent}</a></td>
+                        <td><a href={"/master/user?role=Agent&code="+data.agent}>{data.phone}</a></td>
 
                         <td>{new Date(data.date).toLocaleDateString()}</td>
 
                         <td className="fw-bold">{amt}
 
                         </td>
-                        <td className="fw-bold">{data.isActive && isNormal===1||isNormal===3 ?due:0}
+                        <td className="fw-bold">{data.isNormal && (isNormal===1||isNormal===3) ?due:0}
                         </td>
                         <td className="fw-bold">{data.total}</td>
                         <td className="flex-wrap h2">
@@ -245,14 +495,19 @@ const  due=   (datx<today) ?  (data.amount *0.05* ((today-datx)/(1000 * 60 * 60 
                                     Swal.fire({
 
 
-                                        title: "Accept Payment..?",
+                                        title: "Do You Want to Close This Account..?",
                                         icon: "question",
                                         showCancelButton: true,
-                                        confirmButtonText: `Give ₹${(Number.parseFloat(data.total) + (data.total * 0.07 * ((today - new Date(data.createdAt)) / (1000 * 60 * 60 * 24 * 365)))).toFixed(2)}`,
+                                        // confirmButtonText: `Give ₹${(Number.parseFloat(data.total) + (data.total * 0.07 * ((today - new Date(data.createdAt)) / (1000 * 60 * 60 * 24 * 365)))).toFixed(2)}`,
                                         showLoaderOnConfirm: true,
+
+
                                         async preConfirm(value) {
 
-                                            await axios.get("/api/saving?rajuxy=" + data.code)
+
+                                            await  closeacc(data.code,isNormal===2?5:7.5,data.agent);
+
+                                            // await axios.get("/api/saving?close=" + data.code)
 
                                         },
 
@@ -260,19 +515,15 @@ const  due=   (datx<today) ?  (data.amount *0.05* ((today-datx)/(1000 * 60 * 60 
                                     }).then(u=>{
                                         if (u.isConfirmed){
 
-                                            Swal.fire({
 
 
-                                                title: "Account Closed",
-                                                icon: "success",
-                                              })
 
 
-                                        .then(rr => {
 
-                                                window.location.reload();
+                                            setDilog(true)
 
-                                            })
+
+
                                         }
                                     })
 
@@ -287,7 +538,7 @@ const  due=   (datx<today) ?  (data.amount *0.05* ((today-datx)/(1000 * 60 * 60 
                                     Swal.fire({
 
 
-                                        title: "Accept Payment..?",
+                                        title: `Accept Payment..?${isNormal}-->${due}`,
                                         icon: "question",
                                         showCancelButton: true,
                                         confirmButtonText: `Pay ₹${data.amount}`,
@@ -296,7 +547,7 @@ const  due=   (datx<today) ?  (data.amount *0.05* ((today-datx)/(1000 * 60 * 60 
                                         denyButtonText: `Pay With Due ₹${due} `,
                                         async preDeny(value) {
 
-                                            await axios.get("/api/saving?isNormal=false" + "&code=" + (data.code) + "&pay=" + amt + "&due=" + due + "&isNormal=" + isNormal)
+                                            await axios.get("/api/saving?code=" + (data.code) + "&pay=" + amt + "&due=" + due + "&isNormal=" + isNormal+"&agent=" + data.agent+"&mem="+data.member+"&phone="+data.phone)
 
                                         },
 
@@ -304,7 +555,7 @@ const  due=   (datx<today) ?  (data.amount *0.05* ((today-datx)/(1000 * 60 * 60 
                                         preConfirm: async (login) => {
 
 
-                                            await axios.get("/api/saving?isNormal=false" + "&code=" + (data.code) + "&pay=" + amt + "&isNormal=" + isNormal + (due !== 0 ? "&permanet=true" : ""))
+                                            await axios.get("/api/saving?code=" + (data.code) + "&pay=" + amt + "&isNormal=" + (data.isNormal && (isNormal===1||isNormal===3)?2:0)+"&agent=" + data.agent+"&mem="+data.member+"&phone="+data.phone	 )
 
                                         }
 
@@ -333,7 +584,7 @@ const  due=   (datx<today) ?  (data.amount *0.05* ((today-datx)/(1000 * 60 * 60 
                                     showLoaderOnConfirm: true,
                                     preConfirm: async (login) => {
 
-                                        await axios.delete("/api/saving?raju=x&code=" + data.code)
+                                        await axios.delete("/api/saving?raju=x&code=" + data.code+"&agent="+data.agent+"&phone="+data.phone)
 
                                     }
 
@@ -365,7 +616,7 @@ const  due=   (datx<today) ?  (data.amount *0.05* ((today-datx)/(1000 * 60 * 60 
                                     showLoaderOnConfirm: true,
                                     preConfirm: async (login) => {
 
-                                        await axios.delete("/api/saving?raju=x&code=" + data.code)
+                                        await axios.delete("/api/saving?raju=x&code=" + data.code+"&agent="+data.agent+"&phone="+data.phone)
 
                                     }
 

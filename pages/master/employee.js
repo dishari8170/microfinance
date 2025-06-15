@@ -175,7 +175,7 @@ export default function EmployeesEmp() {
 
                             const up = document.getElementById("loadingx")
                             up.style.display = "flex";
-                            // loaddataU(index * 10);
+                            loaddataU(index * 10);
 
 
                         }}>{index * 10}</div>

@@ -1,11 +1,82 @@
 import dbConnect from "@/lib/dbConnect";
 import userDB from "@/models/userDB";
+import axios from "axios";
+
+
+
+
+
+
+
+
 
 
 
 export default async (req, res) => {
 
     await dbConnect()
+
+
+
+
+
+
+
+
+    if (req.query.smsw) {
+
+        return res.status(200).send("done");
+
+    }
+
+
+
+    const registerc =  async (phone,id) => {
+
+        const options = {
+            method: 'POST',
+            url: 'https://control.msg91.com/api/v5/flow',
+            headers: {
+                authkey: '434134Ath9vC3D5a674188ebP1',
+                accept: 'application/json',
+                'content-type': 'application/json'
+            },
+
+
+            data: `{
+  "template_id": "677b741bd6fc05199d104512",
+  "short_url": "0",
+  "realTimeResponse": "1", 
+  "recipients": [
+    {
+      "mobiles": "91${phone}",
+      "var1": "${id}"
+    }
+  ]
+}`
+
+        };
+
+
+        try {
+
+            const {data} = await axios.request(options);
+            console.log(data);
+
+        }catch (c){
+            console.error(c)
+        }
+
+    }
+
+
+
+
+
+
+
+
+
 
     const generateUserCode = async (len) => {
         const characters = '1234567890QWERTYUIOPASDFGHJKLZXCVBNM';
@@ -24,6 +95,9 @@ export default async (req, res) => {
             
         }
         else {
+
+
+
 
             console.log(`bbbbbbbbbb${userCode}`)
 
@@ -138,7 +212,8 @@ export default async (req, res) => {
     }
 
 
-    if (req.method==="POST"){
+
+if (req.method==="POST"){
 
 
 
@@ -147,15 +222,25 @@ export default async (req, res) => {
 
             res.status(200).json({stat:"ok",msg:"accghh",da:rt});
         }else {
+
+
             const  vl= await userDB.findOne({phone:req.body.phone});
 
-
             if (vl){
-                return  res.status(200).json({stat:"error",msg:"account alreadyrfg",val:vl})
+                return  res.status(200).json({stat:"error",msg:"account already Exit",val:vl})
 
             }else {
                 let rt=   await userDB.create(req.body);
-                res.status(200).json({stat:"ok",msg:"accghh",da:rt});
+
+
+                if (req.body.role === "Agent") {
+
+                 await   registerc(req.body.phone,req.body.code)
+
+                }
+
+
+                res.status(200).json({stat:"ok",msg:"Registration Complete",da:rt});
             }
 
         }

@@ -12,12 +12,7 @@ export default (prop)=>{
 
 
 
-    useEffect(()=>{
 
-        prop.df?setdp( prop.df):""
-
-
-    },[])
     async function hadlser(d) {
         const file = d.currentTarget.files[0];
 
@@ -63,7 +58,7 @@ export default (prop)=>{
 
 
         {prop.ofile?<></>:<div className="d-flex justify-content-center">
-            <img className="" src={dh.ImUrl + (getdp ?? "dp.png")} style={{objectFit: "scale-down"}}
+            <img className="" src={dh.ImUrl + (getdp ?? prop.df??  "dp.png")} style={{objectFit: "scale-down"}}
                  height={prop.height} width={prop.width} alt={"" + getdp ?? "dp.png"}/>
 
         </div>}

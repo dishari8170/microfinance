@@ -90,8 +90,14 @@ mobile_section :["emi_collection_approve","loan_emi_collection","loan_non_emi","
             {/*</div>*/}
 
             <div className="d-inline h2 me-5">
-            <img src='/img_4.png' height={50}/>
-                <FaPowerOff className="text-danger mx-5"/>
+
+                <FaPowerOff className="text-danger mx-5" onClick={y=>{
+
+                    document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+
+
+                    window.location.href="/";
+                }}/>
                 <FaBars className="   " style={{color:"blue"}} onClick={toggleSidebar} />
 
             </div>

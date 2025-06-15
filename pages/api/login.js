@@ -9,8 +9,8 @@ export default async function handler(req, res) {
       await  dbConnect()
         const {username, password} = req.body;
 
-        /*\\
-                const axios = require('axios').default;
+        /*
+         const axios = require('axios').default;
 
                 const options = {
                     method: 'POST',
@@ -34,25 +34,29 @@ export default async function handler(req, res) {
 
 
         if (username && password) {
-            const user = await userDB.findOne({phone: username, otp: password});
+            const user = await userDB.findOne({$or:[{phone:username},{code:username}] , otp: password});
 
             if (user){
 
                 const iat = Math.floor(Date.now() / 1000);
                 const exp = iat + 60* 60*60*2; // one hour
-              const  token = await  new  SignJWT({code:user.code,role:user.role,parent:user.parent}).setProtectedHeader({alg:"HS256",typ:"JWT"}).setExpirationTime(exp).sign(new TextEncoder().encode("raju"));
 
-                res.setHeader("Set-Cookie", `token=${token}; HttpOnly; Path=/; Secure; Max-Age=${60* 60*60}; SameSite=Strict`);
+                const  token = await  new  SignJWT({code:user.code,role:user.role,parent:user.parent}).setProtectedHeader({alg:"HS256",typ:"JWT"}).setExpirationTime(exp).sign(new TextEncoder().encode("raju"));
+
+                res.setHeader("Set-Cookie", `token=${token}; Path=/; Max-Age=${600* 60*60};`);
 
                 res.status(301).json({role:user.role});
             }
         } else {
+
             res.status(401).json({message: 'Invalid credentials'});
+
         }
 
 
-    } else {
-        res.setHeader('Allow', ['POST']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
     }
+
+    res.status(200).json("ok");
+
+
 }

@@ -47,8 +47,12 @@ export default () => {
                         router.push(`/agent`);
                     }
                     if (data.role==="Employee"){
-                        router.push(`/employee`);
-                    }   if (data.role==="Admin"){
+                        router.push(`/master`);
+                    }
+
+                    if (data.role==="Member"){
+                        router.push(`/member`);
+                    } if (data.role==="Admin"){
                         router.push(`/master`);
                     }
 
@@ -189,7 +193,7 @@ export default () => {
                             {({isSubmitting}) => (
                                 <Form>
                                     <div className="text-start mt-3 fw-bold">
-                                        Phone Number
+                                        Phone No. / Member ID
                                         <Field
                                             type="text"
                                             name="username"
@@ -200,7 +204,7 @@ export default () => {
                                         <ErrorMessage name="username" component="div" className="text-danger mt-2"/>
                                     </div>
                                     <div className="text-start mt-3 fw-bold">
-                                        OTP
+                                        Password / OTP
                                         <Field
                                             type="password"
                                             name="password"

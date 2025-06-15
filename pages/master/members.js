@@ -3,7 +3,8 @@ import axios from "axios";
 import {dh} from "@/lib/Dh";
 import {useRouter} from "next/router";
 import Swal from "sweetalert2";
-import {FaDownload, FaEye, FaPenAlt, FaStar, FaTrash} from "react-icons/fa";
+import {FaDownload, FaEye, FaPenAlt, FaRecycle, FaSms, FaStar, FaTrash} from "react-icons/fa";
+import SideZ from "@/Comp/SideZ";
 import SideEmp from "@/Comp/SideMas";
 
 
@@ -140,14 +141,42 @@ export default function MembersEmp() {
 
 
                                 }}><FaTrash/></div>
-                                <a href={`/master/user?role=Member&view=true&_id=${data._id}`}>
+                                <a href={`/master/user?role=Member&view=true&code=${data.code}`}>
                                     <div className="btn btn-success mx-2"><FaEye/></div>
                                 </a>
-                                <a href={`/master/user?role=Member&_id=${data._id}`}>
+
+
+                                <div className="btn mx-2" style={{backgroundColor:"indigo",color:"white"}} onClick={async r => {
+
+
+                                    axios.get(`/api/sendpass?phone=${data.phone}`).then(() => {
+
+
+
+                                        Swal.fire("Done","Password Sent","success")
+
+                                    })
+
+
+                                }}>
+
+
+
+
+
+
+                                <FaSms />
+
+                                </div>
+
+
+                                <a href={`/master/user?role=Member&code=${data.code}&editx=true`}>
                                     <div className="btn btn-primary mx-2"><FaPenAlt/>
                                     </div>
 
                                 </a>
+
+
                                 <a href={`/api/Member_arg?code=${data.code}`}>
                                     <div className="btn btn-primary mx-2"><FaDownload/>
                                     </div>
@@ -162,7 +191,8 @@ export default function MembersEmp() {
 
                     </tbody>
                 </table>
-            </div></div>
+            </div>
+        </div>
         <div className="d-flex justify-content-center align-middle mt-4">
             <ul className="pagination">
 
@@ -172,7 +202,7 @@ export default function MembersEmp() {
 
                             const up = document.getElementById("loadingx")
                             up.style.display = "flex";
-                            // loaddataU(index * 10);
+                            loaddataU(index * 10);
 
 
                         }}>{index * 10}</div>
